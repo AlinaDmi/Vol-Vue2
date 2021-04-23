@@ -9,8 +9,8 @@ export default new Vuex.Store({
     orders:[]
   },
   mutations: {
-    SET_PRODUCTS_TO_STATE: (state,orders) => {
-      state.products = products;
+    SET_ORDERS_TO_STATE: (state,orders) => {
+      state.orders = orders;
     }
   },
   actions: {
@@ -19,8 +19,8 @@ export default new Vuex.Store({
         method: "GET"
       })
       .then ((orders)=>{
-        commit('SET_PRODUCTS_TO_STATE',products.data);
-        return products;
+        commit('SET_ORDERS_TO_STATE',orders.data);
+        return orders;
       })
       .catch((error) => {
         console.log(error);
@@ -31,8 +31,8 @@ export default new Vuex.Store({
   modules: {
   },
   getters: {
-    PRODUCTS(state){
-      return state.products;
+    ORDERS(state){
+      return state.orders;
     }
   }
 })

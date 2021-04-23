@@ -37,6 +37,7 @@ export default {
        flex-basis: 75%;
        box-shadow: 0 0 8px 0 #e0e0e0;
        padding: 4;
+       text-align: left;
       //  margin: auto;
     }
     #item-header{

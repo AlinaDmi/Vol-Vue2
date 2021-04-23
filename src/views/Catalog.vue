@@ -3,7 +3,7 @@
         <h1>catalog</h1>
         <div class="catalog_list">
             <catalog-item
-                v-for="order in this.$store.state.orders"
+                v-for="order in ORDERS"
                 :key="order.id_ord"
                 v-bind:order_data="order"
                 @sendID="showChildId"
@@ -16,7 +16,7 @@
 <script>
 
 import CatalogItem from '@/components/catalog-item.vue'
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 
 export default {
@@ -28,6 +28,11 @@ export default {
         return{
 
         }
+    },
+    computed: {
+        ...mapGetters([
+            'ORDERS'
+        ])
     },
     methods: {
         ...mapActions([
