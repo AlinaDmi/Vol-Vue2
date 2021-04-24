@@ -3,12 +3,16 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-import * as VeeValidate from 'vee-validate';
+//import { ValidationProvider } from 'vee-validate';
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
+import  VeeValidate  from "vee-validate";
 
+Vue.use(VeeValidate);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-Vue.use(VeeValidate);
+//Vue.component('ValidationProvider', ValidationProvider);
+
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 

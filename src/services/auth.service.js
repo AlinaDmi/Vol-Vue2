@@ -6,7 +6,7 @@ class AuthService {
   login(user) {
     return axios
       .post(API_URL + 'auth', {
-        username: user.username,
+        login: user.username,
         password: user.password
       })
       .then(response => {

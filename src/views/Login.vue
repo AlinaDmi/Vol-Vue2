@@ -1,6 +1,7 @@
 <template>
   <div class="col-md-12">
     <div class="card card-container">
+      <h1>Авторизация</h1>
       <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
@@ -83,7 +84,7 @@ export default {
         }
 
         if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth', this.user).then(
+          this.$store.dispatch('auth/login', this.user).then(
             () => {
               this.$router.push('/profile');
             },
@@ -102,7 +103,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 label {
   display: block;
   margin-top: 10px;
