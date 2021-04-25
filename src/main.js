@@ -4,8 +4,11 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 //import { ValidationProvider } from 'vee-validate';
+
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import  VeeValidate  from "vee-validate";
+
+import '@/assets/style.css'
 
 Vue.use(VeeValidate);
 Vue.use(BootstrapVue)

@@ -7,7 +7,7 @@
 
 <script>
 import appHeader from './components/HeaderV.vue'
-
+// import style from './assets/style.css'
 export default {
 
   name: 'Home',
@@ -34,10 +34,7 @@ export default {
     // }
   },
   methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
+
   }
 };
 </script>
