@@ -1,4 +1,5 @@
 <template>
+<!-- Стиль, кнопки, марджины, подрезка описания по сколько-то символов, переход -->
   <div class="catalog-item mx-auto my-2">
         <h6 id="item-header" class="catalog-item_title content-center">{{order_data.name}}</h6>
         <p  class="catalog-item_adr">{{order_data.city}}</p>
