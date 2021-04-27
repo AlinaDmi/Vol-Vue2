@@ -7,9 +7,7 @@
 	
 		<div class="col-xs-10 col-sm-10 col-md-8 col-lg-8 col-xl-6">
 			<p class="lead">{{orgBlDesc}}</p>
-			<div class="text-center">
-				<button type="button" class="btn btn-lg" onclick="document.location='application.html'">Оставить заявку</button>
-			</div>
+			
 		</div>
 		</div>
 </div>

@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
 import Catalog from '../views/Catalog.vue'
 import Reg from '../views/Register.vue'
+import OrdDesc from '../views/OrderDescription.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,7 @@ const routes = [
   {path: '/login', component: Login},
   {path: '/profile', component: Profile},
   {path: '/register', component: Reg},
+  {path: '/orddesc', component: OrdDesc},
   { path: '*', redirect: '/' }
 ]
 

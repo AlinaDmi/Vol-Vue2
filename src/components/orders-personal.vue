@@ -1,10 +1,10 @@
 <template>
 <!-- Стиль, кнопки, марджины, подрезка описания по сколько-то символов, переход -->
   <div class="catalog-item mx-auto my-2 p-4">
-        <h6 id="item-header" class="catalog-item_title content-center">{{order_data.name}}</h6>
-        <p class="catalog-item_adr">{{order_data.city}}</p>
-        <p class="catalog-item_descr">{{order_data.ord_descript}}</p>
-        <p class="catalog-item_stat">{{order_data.ordstatus}}</p>
+        <h6 id="item-header">{{order_data.name}}</h6>
+        <p >{{order_data.city}}</p>
+        <p >{{order_data.date_app}}</p>
+        <p >{{order_data.ordstatus}}</p>
         <button @click="$router.push('orddesc')" type="button" class="btn btn-outline-info mx-auto d-block">
             Подробнее
         </button>

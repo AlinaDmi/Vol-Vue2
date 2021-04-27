@@ -49,16 +49,17 @@ font-family: 'Nunito', sans-serif; */
   padding-bottom: 0rem;
 }
 
-.welcome button{
+.welcome button, .catalog_btn{
   background-color:white;
   border-radius: 50px;
 }
-.welcome2 button{
+.welcome2 button, .catalog_btn{
   background-color:#FCB322;
   color: white; 
   border-radius: 50px;
 }
-.welcome2 button:hover, .welcome button:hover{
+.welcome2 button:hover, .welcome button:hover, 
+.catalog_btn:hover{
   background-color: #7EBDC2;
   color: white;
   transform: scale(1.1);
