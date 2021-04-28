@@ -8,7 +8,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     orders:[],
-    personalOrders:[]
+    personalOrders:[],
+
   },
   mutations: {
     SET_ORDERS_TO_STATE: (state,orders) => {
@@ -25,7 +26,6 @@ export default new Vuex.Store({
       })
       .then ((orders)=>{
         commit('SET_ORDERS_TO_STATE',orders.data);
-        
         return orders;
       })
       .catch((error) => {
@@ -51,11 +51,8 @@ export default new Vuex.Store({
     auth
   },
   getters: {
-    ORDERS(state){
-      return state.orders;
-    },
-    PERSONAL_ORDERS(state){
-      return state.personalOrders;
+    getOrderById: state => id => {
+      return state.orders.find(order => order.id_ord === id);
     }
   }
 })

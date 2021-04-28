@@ -15,7 +15,7 @@ const routes = [
   {path: '/login', component: Login},
   {path: '/profile', component: Profile},
   {path: '/register', component: Reg},
-  {path: '/orddesc', component: OrdDesc},
+  {path: '/orddesc/:ordId', name:'orderdesc', component: OrdDesc, props: true},
   { path: '*', redirect: '/' }
 ]
 

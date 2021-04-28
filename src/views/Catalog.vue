@@ -1,12 +1,17 @@
 <template>
 <div class="catalog">
         <h1>catalog</h1>
+        <!-- <p> </p> -->
         <div class="catalog_list">
             <catalog-item
-                v-for="order in ORDERS"
+                v-for="order in orders"
                 :key="order.id_ord"
                 v-bind:order_data="order"
-                @sendID="showChildId"
+                @sendID="showChildId;
+                $router.push(
+                    {name:'orderdesc',
+                    params: {ordId: order.id_ord}
+                    });"
             />
         </div>
 </div>
@@ -16,7 +21,7 @@
 <script>
 
 import CatalogItem from '@/components/catalog-item.vue'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters,mapState} from 'vuex'
 
 
 export default {
@@ -26,12 +31,11 @@ export default {
     },
     data(){
         return{
-
         }
     },
     computed: {
-        ...mapGetters([
-            'ORDERS'
+        ...mapState([
+            'orders'
         ])
     },
     methods: {
@@ -39,7 +43,7 @@ export default {
             'GET_ORDERS_API'
         ]),
         showChildId(data){
-            console.log(data)
+            console.log(data);
         }
     },
     mounted(){

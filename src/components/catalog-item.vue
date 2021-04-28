@@ -5,7 +5,7 @@
         <p class="catalog-item_adr">{{order_data.city}}</p>
         <p class="catalog-item_descr">{{order_data.ord_descript}}</p>
         <p class="catalog-item_stat">{{order_data.ordstatus}}</p>
-        <button @click="$router.push('orddesc')" type="button" class="btn btn-outline-info mx-auto d-block">
+        <button @click="sendDataToParent" type="button" class="btn btn-outline-info mx-auto d-block">
             Подробнее
         </button>
     </div>
@@ -24,7 +24,8 @@ export default {
     },
     methods:{
         sendDataToParent(){
-            this.$emit('sendID',this.order_data.id_ord)
+            this.$emit('sendID',this.order_data.id_ord);
+            
         }
     }
 }

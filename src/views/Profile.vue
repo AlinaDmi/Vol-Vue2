@@ -26,7 +26,7 @@
   </div>
   <div class="catalog_list">
             <orders-personal
-                v-for="personalOrders in PERSONAL_ORDERS"
+                v-for="personalOrders in personalOrders"
                 :key="personalOrders.id_ord"
                 v-bind:order_data="personalOrders"
             />
@@ -36,7 +36,7 @@
 
 <script>
 
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import ordersPersonal from '../components/orders-personal.vue';
 export default {
   components: { ordersPersonal },
@@ -51,8 +51,8 @@ export default {
       this.idus = this.$store.state.auth.user.volunteer.id_vol;
       return this.$store.state.auth.user;
     },
-    ...mapGetters([
-            'PERSONAL_ORDERS'
+        ...mapState([
+            'personalOrders'
         ])
   },
 
