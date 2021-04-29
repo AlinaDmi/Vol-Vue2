@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import { auth } from './auth.module';
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -9,8 +10,10 @@ export default new Vuex.Store({
   state: {
     orders:[],
     personalOrders:[],
-
   },
+  plugins: [createPersistedState({
+    paths: ['orders'],
+  }),],
   mutations: {
     SET_ORDERS_TO_STATE: (state,orders) => {
       state.orders = orders;
@@ -45,7 +48,21 @@ export default new Vuex.Store({
         console.log(error);
         return error;
       })
-    }
+    },
+    ACCEPT_ORDER({commit},accdata){
+      console.log('перед отправкой ',accdata)
+      return axios('http://192.168.0.33:8081/api/acceptOrder/'+accdata, {
+        method: "GET"
+      })
+      .then ((response)=>{
+        console.log(response.data, this)
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
   },
   modules: {
     auth
@@ -53,6 +70,6 @@ export default new Vuex.Store({
   getters: {
     getOrderById: state => id => {
       return state.orders.find(order => order.id_ord === id);
-    }
+    },
   }
 })
