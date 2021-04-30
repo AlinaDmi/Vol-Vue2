@@ -70,7 +70,7 @@ export default new Vuex.Store({
         method: "GET"
       })
       .then ((response)=>{
-        console.log(response.data, this)
+        console.log(response.data)
         return response;
       })
       .catch((error) => {
