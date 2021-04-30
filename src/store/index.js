@@ -10,16 +10,18 @@ export default new Vuex.Store({
   state: {
     orders:[],
     personalOrders:[],
+    orderDesc:[]
   },
-  plugins: [createPersistedState({
-    paths: ['orders'],
-  }),],
+  plugins: [createPersistedState()],
   mutations: {
     SET_ORDERS_TO_STATE: (state,orders) => {
       state.orders = orders;
     },
     SET_PERSONAL_ORDERS_TO_STATE: (state,personalOrders) => {
       state.personalOrders = personalOrders;
+    },
+    SET_ORDER_DESC_TO_STATE: (state,orderDesc) => {
+      state.orderDesc = orderDesc;
     }
   },
   actions: {
@@ -43,6 +45,19 @@ export default new Vuex.Store({
       .then ((personalOrders)=>{
         commit('SET_PERSONAL_ORDERS_TO_STATE',personalOrders.data);
         return personalOrders;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
+    GET_ORDER_INFO({commit},idord){
+      return axios('http://192.168.0.33:8081/api/orders/'+idord, {
+        method: "GET"
+      })
+      .then ((orderDesc)=>{
+        commit('SET_ORDER_DESC_TO_STATE',orderDesc.data);
+        return orderDesc;
       })
       .catch((error) => {
         console.log(error);
