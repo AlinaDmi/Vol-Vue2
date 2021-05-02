@@ -5,6 +5,8 @@
         <p class="catalog-item_adr">{{order_data.city}}</p>
         <p class="catalog-item_descr">{{order_data.ord_descript}}</p>
         <p class="catalog-item_stat">{{order_data.ordstatus}}</p>
+        <p >Срочность: {{order_data.urgency}}</p>
+        <p >Автомобиль: {{order_data.car}}</p>
         <button @click="sendDataToParent" type="button" class="btn btn-outline-info mx-auto d-block">
             Подробнее
         </button>
@@ -34,7 +36,7 @@ export default {
 
 <style lang="scss">
     .catalog-item {
-       flex-basis: 75%;
+       flex-basis: 85%;
        box-shadow: 0 0 8px 0 #e0e0e0;
        padding: 4;
        text-align: left;
