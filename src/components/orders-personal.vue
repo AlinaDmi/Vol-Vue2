@@ -9,6 +9,7 @@
             Подробнее
         </button>
     </div>
+    
 </template>
 
 <script>

@@ -94,8 +94,87 @@ hr.light{
 @media (max-width: 576px) {
   
 }
+/* --- Со второго файла--- */
+.welcome a{
+  color:white;
+  font-weight: bold;
+}
+.pp{
+  margin-top: 10px;
+}
+#ava{
+  height: 315px;
+  width: 250px;
+  border: 5px solid #7EBDC2;
+  border-radius: 10px;
+}
+.icon{
+  height: 30px;
+  width: 30px;
+  margin: 5px;
+  transition: transform .3s ease-in-out;
+}
+.icon:hover{
+  transform: scale(1.2);
+}
+.rot:hover{
+  transform: scale(1.2)  rotate(45deg);
+}
 
+#personal_page{
+  background-color: #FCB322;
+}
 
+.type-user, #personal_page h2{
+  color: white;
+}
+.p-attention{
+  background-color: #7EBDC2;
+  border-radius: 50px;
+  padding: 5px;
+  font-weight: bold;
+}
+#welcomePane{
+  padding-top: 0;
+}
+.content h3{
+  color: #FCB322;
+  font-weight: bold;
+}
+.div-center {
+  width: 400px;
+  height: 400px;
+  background-color: #fff;
+  
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 1em 2em;
+  display: table;
+}
+
+.btn-enter{
+  background-color:#FCB322;
+  color: white; 
+  border-color: #FCB322;
+  border-radius: 50px;
+}
+
+.btn-enter:hover{
+  background-color: #7EBDC2;
+  border-color: #7EBDC2;
+  transform: scale(1.1);
+}
+
+div.content {
+  display: table-cell;
+  vertical-align: middle;
+}
 /*---Firefox Bug Fix --*/
 .carousel-item {
   transition: -webkit-transform 0.5s ease;
