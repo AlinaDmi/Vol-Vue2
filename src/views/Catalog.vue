@@ -1,24 +1,36 @@
 <template>
 <div class="catalog">
-      <orange-block org-bl-tit="Доступные заказы"/>
+    <orange-block org-bl-tit="Доступные заказы"/>
     <b-container class="bv-example-row ">
         <b-row>
             <b-col sm="4" >
-                <orders-filter @clickedCar="onClickChild" @clickedUrg="onClickChildUrg"/>
-                <button @click="filterAll(car,urg)" type="button" class="btn btn-outline-info mx-auto d-block">
+                <orders-filter :isDropped="isDroppedToChild" @clickedCar="onClickChild" @clickedUrg="onClickChildUrg"/>
+                <!-- Районы -->
+                <p class="my-1 text-left">Район:</p>
+                <b-form-select size="sm" v-model="selectedDistr" >
+                    <b-form-select-option :value="null">Все</b-form-select-option>
+                    <option v-for="order in orders"
+                    :key="order.district"
+                    v-bind:value="order.district">{{order.district}}</option>
+                </b-form-select>
+                <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
+                <!-- Кнопки -->
+                <button @click="filterAll(car,urg,selectedDistr)" type="button" class="btn btn-outline-info mx-auto d-block">
                         Сорт
                 </button>
-                <button @click="filterAll(car,urg)" type="button" class="btn btn-outline-info mx-auto d-block">
+                <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto d-block">
                         Сбросить
                 </button>
                 <p>Car: {{car}}</p>
             </b-col>
+        <!-- Второй столбик -->
             <b-col sm="8">
-                <h4>Найдено заказов: {{filteredOrders.length}}</h4>
+                <b-form-input class="my-4 mx-auto search" type="text" v-model="search" placeholder="найти заказ (по названию или описанию)" />
+                <h4>{{foundOrdersTitle}} {{ordersCount}}</h4>
         <!-- <p> </p> -->
-                <div class="catalog_list scrollbar-cyan">
-                    <catalog-item
-                        v-for="order in filteredOrders"
+                <div v-if="foundOrdersTitle === 'Найдено заказов:'" class="catalog_list scrollbar-cyan">
+                    <catalog-item 
+                        v-for="order in filteredOrdersSearch"
                         :key="order.id_ord"
                         v-bind:order_data="order"
                         @sendID="showChildId;
@@ -45,7 +57,8 @@ import {mapActions, mapGetters,mapState} from 'vuex'
 import OrangeBlock from '../components/orange-block.vue'
 import OrdersFilter from '../components/orders-filter.vue'
 
-
+// ВОЛОНТЁРУ ТОК С ЕГО ГОРОДОМ БЛЯТЬ СДЕЛАЙ (ну и чтоб ток которые можно принять как ислам)
+// можно ли сделать поиск компонентом? наверное да но если время будет поразберись
 export default {
     name:'catalog',
     components: {
@@ -55,9 +68,13 @@ export default {
     },
     data(){
         return{
-            car:'',
-            urg:'срочно',
-            ordersFiltered:[]
+            car:null,
+            urg:null,
+            ordersFiltered:[],
+            selectedDistr: null,
+            foundOrdersTitle: 'Найдено заказов:',
+            search:'',
+            isDroppedToChild: false
         }
     },
     computed: {
@@ -67,13 +84,28 @@ export default {
            ...mapGetters([
             'withFilter'
         ]),
+        ordersCount(){
+            if(this.foundOrdersTitle === 'Найдено заказов:'){
+                return this.filteredOrdersSearch.length;
+            } else {
+                return null
+            }
+        },
         filteredOrders(){
             if(this.ordersFiltered.length){
                 return this.ordersFiltered
             } else{
                 return this.orders
             }
+        },
+        filteredOrdersSearch(){
+            return this.filteredOrders.filter((order) =>{
+                if(order.name.toLowerCase().match(this.search)
+                ||order.ord_descript.toLowerCase().match(this.search))
+                return order;
+            })
         }
+
     },
     methods: {
         ...mapActions([
@@ -83,8 +115,18 @@ export default {
         showChildId(data){
             console.log(data);
         },
-        filterAll(car,urg){
-            this.ordersFiltered=this.withFilter(car,urg);
+        filterAll(car,urg,selectedDistr){
+            this.foundOrdersTitle = 'Найдено заказов:'
+            console.log(car,urg,selectedDistr)
+            this.ordersFiltered=this.withFilter(car,urg,selectedDistr);
+            if(!this.ordersFiltered.length){
+                this.foundOrdersTitle = 'Заказы не найдены'
+            }
+        },
+        dropFilters(){
+            this.isDroppedToChild = true
+            this.selectedDistr = null
+            // this.filterAll(this.car,this.urg,this.selectedDistr)
         },
          onClickChild (value) {
             console.log(value) // someValue
@@ -112,4 +154,9 @@ export default {
             overflow-y:scroll;
         }
     }
+    .search{
+         max-width: 600px !important;
+         
+    }
+
 </style>

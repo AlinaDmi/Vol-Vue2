@@ -86,8 +86,8 @@ export default new Vuex.Store({
     getOrderById: state => id => {
       return state.orders.find(order => order.id_ord === id);
     },
-    withFilter: state => (car,urg) => {
-      console.log(car,urg);
+    withFilter: state => (car,urg,distr) => {
+      console.log(car,urg,distr);
       let ordsels = state.orders
       if (car !== null)
       {
@@ -99,6 +99,11 @@ export default new Vuex.Store({
         // ordsels = ordsels.find(order => order.urgency === urg)
          ordsels = ordsels.filter(order => order.urgency === urg)
       }
+      if (distr !== null)
+      {
+         ordsels = ordsels.filter(order => order.district === distr)
+      }
+      // console.log(ordsels)
       return ordsels
   }
 }

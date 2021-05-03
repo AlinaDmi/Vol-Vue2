@@ -9,6 +9,7 @@
   <profile-personal 
     :person="currentUser"
   />
+  <profile-table />
   <div class="catalog_list">
             <orders-personal
                 v-for="personalOrders in personalOrders"
@@ -24,8 +25,9 @@
 import {mapActions, mapState} from 'vuex'
 import ordersPersonal from '../components/orders-personal.vue';
 import ProfilePersonal from '../components/profile-personal.vue';
+import ProfileTable from '../components/profile-table.vue';
 export default {
-  components: { ordersPersonal, ProfilePersonal },
+  components: { ordersPersonal, ProfilePersonal, ProfileTable },
   name: 'Profile',
  data: function () {
     return {
@@ -37,9 +39,9 @@ export default {
       this.idus = this.$store.state.auth.user.volunteer.id_vol;
       return this.$store.state.auth.user;
     },
-        ...mapState([
-            'personalOrders'
-        ])
+    ...mapState([
+      'personalOrders'
+    ])
   },
 
   methods: {

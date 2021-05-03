@@ -5,7 +5,10 @@
         <p >{{order_data.city}}</p>
         <p >{{order_data.date_app}}</p>
         <p >{{order_data.ordstatus}}</p>
-        <button @click="$router.push('orddesc')" type="button" class="btn btn-outline-info mx-auto d-block">
+        <button @click="$router.push(
+                            {name:'orderdesc',
+                            params: {ordId: order_data.id_ord}
+                            })" type="button" class="btn btn-outline-info mx-auto d-block">
             Подробнее
         </button>
     </div>
