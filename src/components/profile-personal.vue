@@ -7,17 +7,18 @@
 			<img src="img/svg/ava.png" class="img-fluid" id="ava">
 		</div>
         <div class="col-lg-6 cont">
-            <h2>{{person.volunteer.vol_name}}</h2>
+            <h2 v-if="person.roleName === 'ROLE_VOL'">{{curPerson.vol_name}}</h2>
+            <h2 v-else>{{curPerson.name}}</h2>
 			
-            <p class="type-user">Волонтёр</p>
+            <p class="type-user">{{role}}</p>
 
 			<div class="row padding">
 				<div class="col">
-					<p>Мужчина <br>Возраст<br>{{person.volunteer.city}}</p>
+					<p>Пол: {{curPerson.gender}} <br>Возраст</p>
 				</div>
 				<div class="col">
-					<p>{{person.volunteer.email}} <br>
-					{{person.volunteer.phone}}</p>		
+					<p>{{curPerson.email}} <br>
+					{{curPerson.phone}}</p>		
 				</div>
 			</div>
 			<p>Выполнено заказов:</p>
@@ -92,7 +93,23 @@
 
 <script>
 export default {
-    props:['person']
+    props:['person'],
+    data(){
+        return{
+            role:'Волонтёр'
+        }
+    },
+    computed:{
+        curPerson(){
+            if (this.person.roleName === 'ROLE_VOL'){
+                return this.person.volunteer
+            } else {
+                this.role = 'Координатор'
+                return this.person.cord
+            }
+            
+        }
+    }
 }
 </script>
 

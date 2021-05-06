@@ -4,7 +4,7 @@
     <b-container class="bv-example-row ">
         <b-row>
             <b-col sm="4" >
-                <orders-filter :isDropped="isDroppedToChild" @clickedCar="onClickChild" @clickedUrg="onClickChildUrg"/>
+                <orders-filter :isDropped="isDroppedToChild" @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat"/>
                 <!-- Районы -->
                 <p class="my-1 text-left">Район:</p>
                 <b-form-select size="sm" v-model="selectedDistr" >
@@ -15,7 +15,7 @@
                 </b-form-select>
                 <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
                 <!-- Кнопки -->
-                <button @click="filterAll(car,urg,selectedDistr)" type="button" class="btn btn-outline-info mx-auto d-block">
+                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn btn-outline-info mx-auto d-block">
                         Сорт
                 </button>
                 <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto d-block">
@@ -70,6 +70,7 @@ export default {
         return{
             car:null,
             urg:null,
+            stat:null,
             ordersFiltered:[],
             selectedDistr: null,
             foundOrdersTitle: 'Найдено заказов:',
@@ -115,10 +116,11 @@ export default {
         showChildId(data){
             console.log(data);
         },
-        filterAll(car,urg,selectedDistr){
+        filterAll(car,urg,selectedDistr,stat){
+             this.isDroppedToChild = false
             this.foundOrdersTitle = 'Найдено заказов:'
-            console.log(car,urg,selectedDistr)
-            this.ordersFiltered=this.withFilter(car,urg,selectedDistr);
+            console.log(car,urg,selectedDistr,stat)
+            this.ordersFiltered=this.withFilter(car,urg,selectedDistr,stat);
             if(!this.ordersFiltered.length){
                 this.foundOrdersTitle = 'Заказы не найдены'
             }
@@ -134,6 +136,9 @@ export default {
         },
          onClickChildUrg (value) {
             this.urg = value
+        },
+         onClickChildStat (value) {
+            this.stat = value
         }
     },
     mounted(){

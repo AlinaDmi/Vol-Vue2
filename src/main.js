@@ -10,10 +10,7 @@ import  VeeValidate  from "vee-validate";
 
 import '@/assets/style.css'
 
-Vue.use(VeeValidate, {
-  inject: true,
-  fieldsBagName: 'veeFields'
-});
+Vue.use(VeeValidate);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 //Vue.component('ValidationProvider', ValidationProvider);

@@ -6,8 +6,15 @@
     <h2>{{$route.params.ordId}}</h2>
     <p>Юзер {{idus}}</p>
     <div class="welcome2  text-center">
-        <button v-if="orderDesc.ordstatus==='активен'"  type="button" @click="acceptOrder(acceptData2)" class="btn">Принять к исполнению</button>
+        <button v-if="orderDesc.ordstatus==='активен' && currentUser.roleName === 'ROLE_VOL'"  type="button" @click="acceptOrder(acceptData2)" class="btn">Принять к исполнению</button>
         <button v-else-if="orderDesc.ordstatus==='принят к исполнению'" type="button" @click="acceptOrder(acceptData2)" class="btn">Завершить</button>
+       
+        <offer-modal v-else-if="orderDesc.ordstatus==='активен' && currentUser.roleName === 'ROLE_CORD'"/>
+       
+        <div v-else-if="orderDesc.ordstatus==='в рассмотрении'">
+        <button  type="button" @click="ConfirmOrder(acceptData2)" class="btn">Подтвердить</button>
+        <button  type="button" @click="acceptOrder(acceptData2)" class="btn">Изменить</button>
+        </div>
         <modal v-else/>
         <!-- <button v-else type="button" @click="acceptOrder(acceptData2)" class="btn">Добавить фото</button> -->
   	</div>
@@ -20,10 +27,11 @@
 <script>
 import { mapState,mapActions } from 'vuex';
 import Modal from '../components/modal.vue';
+import OfferModal from '../components/offer-modal.vue';
 import OrangeBlock from '../components/orange-block.vue'
 export default {
     name:'orderDesc',
-    components: {OrangeBlock, Modal},
+    components: {OrangeBlock, Modal, OfferModal},
     props: ['ordId'],
        data(){
         return{
@@ -46,10 +54,14 @@ export default {
     methods: {
       ...mapActions([
           'ACCEPT_ORDER',
-          'GET_ORDER_INFO'
+          'GET_ORDER_INFO',
+          'CONFIRM_ORDER_CORD'
       ]),
       acceptOrder(acceptData2){
         this.response = this.ACCEPT_ORDER(acceptData2);
+      },
+      ConfirmOrder(acceptData2){
+        this.response = this.CONFIRM_ORDER_CORD(acceptData2);
       }
     },
 
@@ -57,8 +69,14 @@ export default {
      mounted(){
       this.GET_ORDER_INFO(this.ordIdData);
       this.stat = this.orderDesc.ordstatus
-      this.idus = this.$store.state.auth.user.volunteer.id_vol;
-      this.acceptData2 = this.ordIdData+','+this.$store.state.auth.user.volunteer.id_vol;
+      if(this.$store.state.auth.user.roleName === 'ROLE_VOL'){
+        this.idus = this.$store.state.auth.user.volunteer.id_vol;
+        this.acceptData2 = this.ordIdData+','+this.idus;
+      } else{
+        this.idus = this.$store.state.auth.user.cord.id_cord;
+        this.acceptData2 = this.ordIdData+','+this.idus;
+      }
+      
       
       // this.$store.watch(
       // (state, getters) => state.orderDesc,

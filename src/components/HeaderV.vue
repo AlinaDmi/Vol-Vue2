@@ -72,6 +72,11 @@
                 Главная
               </router-link>
             </li>
+            <li class="nav-item">
+              <router-link to="/sendorder" class="nav-link">
+                Заявка на помощь
+              </router-link>
+            </li>
             
             
        
@@ -89,7 +94,7 @@
               </li>
         
           <!-- Logged in -->
-            <li class="nav-item ">
+            <li v-if="currentUser" class="nav-item ">
               <router-link class="nav-link" to="/catalog">Заказы</router-link>
             </li> 
             <li v-if="currentUser" class="nav-item">
