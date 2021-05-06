@@ -13,7 +13,7 @@
        
         <div v-else-if="orderDesc.ordstatus==='в рассмотрении'">
         <button  type="button" @click="ConfirmOrder(acceptData2)" class="btn">Подтвердить</button>
-        <button  type="button" @click="acceptOrder(acceptData2)" class="btn">Изменить</button>
+        <modal-order-edit :orderInfo="orderDesc"/>
         </div>
         <modal v-else/>
         <!-- <button v-else type="button" @click="acceptOrder(acceptData2)" class="btn">Добавить фото</button> -->
@@ -26,12 +26,13 @@
 
 <script>
 import { mapState,mapActions } from 'vuex';
+import ModalOrderEdit from '../components/modal-order-edit.vue';
 import Modal from '../components/modal.vue';
 import OfferModal from '../components/offer-modal.vue';
 import OrangeBlock from '../components/orange-block.vue'
 export default {
     name:'orderDesc',
-    components: {OrangeBlock, Modal, OfferModal},
+    components: {OrangeBlock, Modal, OfferModal, ModalOrderEdit},
     props: ['ordId'],
        data(){
         return{

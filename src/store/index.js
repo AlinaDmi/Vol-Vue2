@@ -112,6 +112,19 @@ export default new Vuex.Store({
         return error;
       })
     },
+    EDIT_ORDER({commit},idord){
+      return axios('http://192.168.0.33:8081/api/orders/'+idord, {
+        method: "GET"
+      })
+      .then ((orderDesc)=>{
+        commit('SET_ORDER_DESC_TO_STATE',orderDesc.data);
+        return orderDesc;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
     CONFIRM_ORDER_CORD({commit},accdata){
       console.log('перед отправкой ',accdata)
       return axios('http://192.168.0.33:8081/api/ordersConfirmation/'+accdata, {

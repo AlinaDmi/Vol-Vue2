@@ -3,6 +3,7 @@ import AuthService from '../services/auth.service';
 
 
 const user = JSON.parse(localStorage.getItem('user'));
+
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
@@ -27,7 +28,21 @@ export const auth = {
       AuthService.logout();
       commit('logout');
       // sessionStorage.clear();
+    },
+
+    createOrder({ commit }, {order,customer}) {
+      console.log('С модуля ',order,customer)
+      return AuthService.createOrder(order,customer).then(
+        response => {
+          console.log(response.data)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
     }
+
     //,
     // register({ commit }, user) {
     //   return AuthService.register(user).then(

@@ -22,6 +22,14 @@ class AuthService {
     localStorage.removeItem('user');
   }
 
+  createOrder(order,customer) {
+    console.log(order,customer)
+    return axios.post(API_URL + 'orderCreate', {
+      orderOBJ: order,
+      customerObj: customer
+    });
+  }
+
   // register(user) {
   //   return axios.post(API_URL + 'signup', {
   //     username: user.username,

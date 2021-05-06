@@ -5,20 +5,22 @@
         <b-row>
             <b-col sm="4" >
                 <orders-filter :isDropped="isDroppedToChild" @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat"/>
+                
                 <!-- Районы -->
                 <p class="my-1 text-left">Район:</p>
                 <b-form-select size="sm" v-model="selectedDistr" >
                     <b-form-select-option :value="null">Все</b-form-select-option>
                     <option v-for="order in orders"
-                    :key="order.district"
+                    :key="order.id_ord"
                     v-bind:value="order.district">{{order.district}}</option>
                 </b-form-select>
                 <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
+                
                 <!-- Кнопки -->
-                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn btn-outline-info mx-auto d-block">
+                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn btn-outline-info mx-auto">
                         Сорт
                 </button>
-                <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto d-block">
+                <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto">
                         Сбросить
                 </button>
                 <p>Car: {{car}}</p>
@@ -101,8 +103,8 @@ export default {
         },
         filteredOrdersSearch(){
             return this.filteredOrders.filter((order) =>{
-                if(order.name.toLowerCase().match(this.search)
-                ||order.ord_descript.toLowerCase().match(this.search))
+                if(order.name.toLowerCase().match(this.search.toLowerCase())
+                ||order.ord_descript.toLowerCase().match(this.search.toLowerCase()))
                 return order;
             })
         }
