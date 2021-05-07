@@ -13,7 +13,7 @@
        
         <div v-else-if="orderDesc.ordstatus==='в рассмотрении'">
         <button  type="button" @click="ConfirmOrder(acceptData2)" class="btn">Подтвердить</button>
-        <modal-order-edit :orderInfo="orderDesc"/>
+        <modal-order-edit :orderInfo="orderDesc" :id_ord="ordIdData"/>
         </div>
         <modal v-else/>
         <!-- <button v-else type="button" @click="acceptOrder(acceptData2)" class="btn">Добавить фото</button> -->

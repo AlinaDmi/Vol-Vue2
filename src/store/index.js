@@ -114,11 +114,11 @@ export default new Vuex.Store({
     },
     EDIT_ORDER({commit},idord){
       return axios('http://192.168.0.33:8081/api/orders/'+idord, {
-        method: "GET"
+        method: "PUT"
       })
-      .then ((orderDesc)=>{
-        commit('SET_ORDER_DESC_TO_STATE',orderDesc.data);
-        return orderDesc;
+      .then ((response)=>{
+        console.log(response.data)
+        return response;
       })
       .catch((error) => {
         console.log(error);

@@ -1,8 +1,6 @@
 <template>
   <div class="card-container">
-      <div v-if="successful">
-        <h2>{{message}}</h2>
-      </div> 
+ 
       <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма подачи заявки</h3>
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
@@ -191,7 +189,7 @@ export default {
     };
   },
   props:
-        ['isEdited','orderInfo'],
+        ['isEdited','orderInfo','id_ord'],
    watch: {
     orderInfo: {
         immediate: true, 
@@ -275,9 +273,21 @@ export default {
             }
           );
           } else {
-
+            //ЧЕКНИ НА ПУТ И ПОСТ
+             this.$store.dispatch('auth/editOrder', {order: this.order, id_ord: this.id_ord}).then(
+            data => {
+              this.message = 'Заказ успешно обновлён';
+              this.successful = true;
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
           }
-          
         }
       });
     }

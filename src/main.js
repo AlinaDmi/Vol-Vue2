@@ -10,6 +10,16 @@ import  VeeValidate  from "vee-validate";
 
 import '@/assets/style.css'
 
+var filter = function(text, length, clamp){
+  clamp = clamp;
+  var node = document.createElement('div');
+  node.innerHTML = text;
+  var content = node.textContent;
+  return content.length > length ? content.slice(0, length) + clamp : content;
+};
+
+Vue.filter('truncate', filter);
+
 Vue.use(VeeValidate);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

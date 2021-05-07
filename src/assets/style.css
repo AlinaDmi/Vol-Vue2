@@ -81,6 +81,22 @@ hr.light{
 .welcome h1, .welcome2 h1{
   font-weight: 500;
 }
+/* кнопка аутлайн */
+.btn-out {
+  border: 2px solid ;
+  background-color: white;
+  border-radius: 50px;
+  
+  cursor: pointer;
+  padding: 7px 14px;
+  border-color: #7EBDC2;
+  color: rgb(35, 137, 141);
+}
+
+.btn-out:hover {
+  background-color: #7EBDC2;
+  color: white;
+}
 
 /* ::-webkit-scrollbar
 {

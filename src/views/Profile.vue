@@ -9,14 +9,15 @@
   <profile-personal 
     :person="currentUser"
   />
-  <profile-table />
-  <div class="catalog_list">
+  <!-- <profile-table /> -->
+  <h3>Мои заказы</h3>
+  <div class="catalog-personal_list">
             <orders-personal
                 v-for="personalOrders in personalOrders"
                 :key="personalOrders.id_ord"
                 v-bind:order_data="personalOrders"
             />
-        </div>
+  </div>
 </div>
 </template>
 
@@ -25,14 +26,13 @@
 import {mapActions, mapState} from 'vuex'
 import ordersPersonal from '../components/orders-personal.vue';
 import ProfilePersonal from '../components/profile-personal.vue';
-import ProfileTable from '../components/profile-table.vue';
 export default {
-  components: { ordersPersonal, ProfilePersonal, ProfileTable },
+  components: { ordersPersonal, ProfilePersonal},
   name: 'Profile',
  data: function () {
     return {
       idus:0,
-      role
+      role:''
     }
   },
   computed: {
@@ -63,3 +63,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+    .catalog-personal {
+        &_list{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            // height: 600px;
+            overflow-y:scroll;
+        }
+    }
+
+</style>

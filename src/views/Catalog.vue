@@ -17,13 +17,12 @@
                 <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
                 
                 <!-- Кнопки -->
-                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn btn-outline-info mx-auto">
-                        Сорт
+                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn-out mx-1 my-1">
+                        Применить фильтры
                 </button>
-                <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto">
+                <button @click="dropFilters" type="button" class="btn-out mx-1 my-1">
                         Сбросить
                 </button>
-                <p>Car: {{car}}</p>
             </b-col>
         <!-- Второй столбик -->
             <b-col sm="8">

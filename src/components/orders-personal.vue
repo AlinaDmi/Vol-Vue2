@@ -1,16 +1,33 @@
 <template>
 <!-- Стиль, кнопки, марджины, подрезка описания по сколько-то символов, переход -->
-  <div class="catalog-item mx-auto my-2 p-4">
-        <h6 id="item-header">{{order_data.name}}</h6>
-        <p >{{order_data.city}}</p>
-        <p >{{order_data.date_app}}</p>
-        <p >{{order_data.ordstatus}}</p>
-        <button @click="$router.push(
-                            {name:'orderdesc',
-                            params: {ordId: order_data.id_ord}
-                            })" type="button" class="btn btn-outline-info mx-auto d-block">
-            Подробнее
-        </button>
+  <div class="catalog-item-personal mx-auto p-2">
+      <b-container>
+        <b-row>
+            <b-col>
+                <p> <br> {{order_data.name | truncate(20, '...')}}</p>
+            </b-col>
+            <b-col>
+                <p>Дата принятия <br> {{order_data.date_app | truncate(10, '')}}</p>
+            </b-col>
+            <b-col>
+                <p> Дата завершения <br> {{finish | truncate(10, '')}}</p>
+            </b-col>
+            <b-col>
+                <p> Статус <br> {{order_data.ordstatus}}</p>
+            </b-col>
+            <b-col sm="2" >
+                <button @click="$router.push(
+                                    {name:'orderdesc',
+                                    params: {ordId: order_data.id_ord}
+                                    })" type="button" class=" btn-out d-block">
+                    Подробнее
+        
+                </button>
+            </b-col>
+
+        </b-row>         
+      </b-container>
+                 
     </div>
     
 </template>
@@ -22,8 +39,19 @@ export default {
         order_data: {
             type: Object,
             default() {
-                return{}
+                return{
+                }
             }
+        }
+    },
+    computed:{
+        finish(){
+            if(this.order_data.date_finish){
+                return this.order_data.date_finish
+            } else {
+                return '-'
+            }
+            
         }
     },
     methods:{
@@ -36,12 +64,10 @@ export default {
 
 
 <style lang="scss">
-    .catalog-item {
-       flex-basis: 75%;
-       box-shadow: 0 0 8px 0 #e0e0e0;
-       padding: 4;
+    .catalog-item-personal {
+       flex-basis: 85%;
+       border: 1px solid #7EBDC2 !important;
        text-align: left;
-      //  margin: auto;
     }
     #item-header{
         text-align: center;

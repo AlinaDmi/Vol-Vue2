@@ -41,6 +41,19 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+
+    editOrder({ commit }, {order,id_ord}) {
+      console.log('С модуля эдита ',order,id_ord)
+      return AuthService.editOrder(order,id_ord).then(
+        response => {
+          console.log(response.data)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
     }
 
     //,

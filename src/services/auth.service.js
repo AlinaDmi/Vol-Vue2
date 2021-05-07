@@ -30,6 +30,20 @@ class AuthService {
     });
   }
 
+  editOrder(order, id_ord) {
+    console.log('с внутри эдита ',order, id_ord)
+    return axios.post(API_URL + 'orders/' + id_ord, {
+      name: order.ord_name,
+      car: order.car_req,
+      ord_descript: order.ord_descript,
+      ordstatus: order.ord_status,
+      city: order.city,
+      district: order.district,
+      adress: order.adress,
+      urgency: order.urgency
+    });
+  }
+
   // register(user) {
   //   return axios.post(API_URL + 'signup', {
   //     username: user.username,

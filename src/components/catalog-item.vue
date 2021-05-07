@@ -7,7 +7,7 @@
         <p class="catalog-item_stat">{{order_data.ordstatus}}</p>
         <p >Срочность: {{order_data.urgency}}</p>
         <p >Автомобиль: {{order_data.car}}</p>
-        <button @click="sendDataToParent" type="button" class="btn btn-outline-info mx-auto d-block">
+        <button @click="sendDataToParent" type="button" class="btn-out mx-auto d-block">
             Подробнее
         </button>
     </div>
