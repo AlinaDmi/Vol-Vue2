@@ -11,6 +11,7 @@
   />
   <!-- <profile-table /> -->
   <h3>Мои заказы</h3>
+  <p v-if="!personalOrders.length">Заказов пока нет</p>
   <div class="catalog-personal_list">
             <orders-personal
                 v-for="personalOrders in personalOrders"
@@ -39,7 +40,7 @@ export default {
     currentUser() {
       this.role = this.$store.state.auth.user.roleName;
       if(this.role === 'ROLE_VOL'){
-        this.idus = this.$store.state.auth.user.volunteer.id_vol;
+        this.idus = this.$store.state.auth.user.user.id_vol;
       }
       return this.$store.state.auth.user;
     },

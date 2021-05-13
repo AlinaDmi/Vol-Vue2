@@ -1,15 +1,45 @@
 <template>
+<div>
+  <orange-block org-bl-tit="Авторизация"/>
   <div class="col-md-12">
     <div class="card card-container">
-      <h1>Авторизация</h1>
-      <img
+      <!-- <h3>Форма входа</h3> -->
+      <!-- <img
         id="profile-img"
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
-      />
-      <form name="form" @submit.prevent="handleLogin">
+      /> -->
+      <p v-if="resetM"> Проверьте свою электронную почту. Если на неё зарегестрирован аккаунт, то вам было отправлено письмо о смене пароля. </p>
+
+       <form v-if="reset" name="form" @submit.prevent="handlePassword">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="email">Для смены пароля введите ваш email</label>
+          <input
+            v-model="email"
+            v-validate="'required'"
+            type="email"
+            class="form-control"
+            name="email"
+          />
+          <div
+            v-if="errors.has('email')"
+            class="alert alert-danger"
+            role="alert"
+          >Необходимо ввести email</div>
+        </div>
+          <div class="form-group welcome2">
+          <button class="btn " :disabled="loading">
+            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <span>Сменить пароль</span>
+          </button>
+        </div>
+        </form>
+
+
+
+      <form v-if="!reset && !resetM" name="form" @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="username">Логин</label>
           <input
             v-model="user.username"
             v-validate="'required'"
@@ -21,10 +51,10 @@
             v-if="errors.has('username')"
             class="alert alert-danger"
             role="alert"
-          >Username is required!</div>
+          >Необходимо ввести логин</div>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">Пароль</label>
           <input
             v-model="user.password"
             v-validate="'required'"
@@ -36,30 +66,40 @@
             v-if="errors.has('password')"
             class="alert alert-danger"
             role="alert"
-          >Password is required!</div>
+          >Необходимо ввести пароль</div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
+        <div class="form-group welcome2">
+          <button class="btn " :disabled="loading">
             <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-            <span>Login</span>
+            <span>Войти</span>
           </button>
         </div>
         <div class="form-group">
           <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
         </div>
       </form>
+      <button v-if="!reset && !resetM" class="btn btn-link btn-anchor d-flex justify-content-end" @click="passReset" >
+            Забыли пароль?
+       </button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import orangeBlock from '../components/orange-block.vue';
 import User from '../models/user';
+import {mapActions} from 'vuex'
 
 export default {
+  components: { orangeBlock },
   name: 'Login',
   data() {
     return {
       user: new User('', ''),
+      reset:false,
+      resetM:false,
+      email:'',
       loading: false,
       message: ''
     };
@@ -75,6 +115,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+            'RESET_PASS_EMAIL'
+        ]),
+    passReset(){
+      this.reset = true
+    },
+    handlePassword(){
+      this.$validator.validateAll().then(isValid => {
+        
+        if (this.email) {
+          this.message = this.RESET_PASS_EMAIL(this.email)
+          this.reset = false
+          this.resetM = true
+        }
+      });
+    },
     handleLogin() {
       this.loading = true;
       this.$validator.validateAll().then(isValid => {
@@ -103,22 +159,22 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 label {
   display: block;
   margin-top: 10px;
 }
 
-.card-container.card {
-  max-width: 350px !important;
-  padding: 40px 40px;
+.card-container {
+  max-width: 250px !important;
+    margin: 0 auto 25px;
+//   margin-top: 50px;
 }
 
 .card {
   background-color: #f7f7f7;
   padding: 20px 25px 30px;
-  margin: 0 auto 25px;
-  margin-top: 50px;
+
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;

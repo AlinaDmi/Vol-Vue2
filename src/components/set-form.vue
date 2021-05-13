@@ -1,55 +1,113 @@
 <template>
 <div>
   <div class="col-md-12">
-    <div class="card-container">
+ <div class="card-container">
+   <!-- Активен -->
+      <form name="form" @submit.prevent="handleSet">
 
-      <img
-        id="profile-img"
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card"
-      />
-      <form name="form" @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            v-model="user.username"
-            v-validate="'required'"
-            type="text"
-            class="form-control"
-            name="username"
-          />
-          <div
-            v-if="errors.has('username')"
-            class="alert alert-danger"
-            role="alert"
-          >Username is required!</div>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            v-model="user.password"
-            v-validate="'required'"
-            type="password"
-            class="form-control"
-            name="password"
-          />
-          <div
-            v-if="errors.has('password')"
-            class="alert alert-danger"
-            role="alert"
-          >Password is required!</div>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" :disabled="loading">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-            <span>Login</span>
-          </button>
-        </div>
-        <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
-        </div>
+            <!-- Логин -->
+           
+           <!-- ФИО -->
+          <div class="form-group my-1 text-left">
+            <label for="name">Имя</label>
+            <input
+              v-model="vol.name"
+              v-validate="'required|min:2|max:40'"
+              type="text"
+              class="form-control"
+              name="name"
+            />
+            <div
+              v-if="submitted && errors.has('name')"
+              class="alert-danger"
+            >{{errors.first('name')}}</div>
+          </div>
+           <!-- Мыло -->
+          <div class="form-group my-1 text-left">
+            <label for="email">Email</label>
+            <input
+              v-model="user.email"
+              v-validate="'required|min:3|max:40'"
+              type="email"
+              class="form-control"
+              name="email"
+            />
+            <div
+              v-if="submitted && errors.has('email')"
+              class="alert-danger"
+            >{{errors.first('email')}}</div>
+          </div>
+
+            <!-- Телефон -->
+         <div class="form-group my-1 text-left">
+            <label for="cusPhone">Телефон</label>
+            <input
+              v-model="phone" 
+              v-validate="'required'"
+              type="text"
+              class="form-control"
+              name="cusPhone"
+              placeholder="(xxx)xxx-xxxx"
+              @input="acceptNumber"
+            />
+            <div
+              v-if="submitted && errors.has('cusPhone')"
+              class="alert-danger"
+            >{{errors.first('cusPhone')}}</div>
+          </div>
+
+         <!-- ДР -->
+  
+
+                   <!-- Пол -->
+
+        <!-- Город -->
+            
+            <div class="form-group my-1 text-left">
+                <label for="city">Город</label>
+                <select
+                    v-model="vol.city"
+                    v-validate="'required'"
+                    name="city"
+                    class="form-control" id="city">
+                 <option :value="null">Выберите город</option>   
+                <option v-for="city in cities"
+                    :key="city.idcity"
+                    v-bind:value="city.name">{{city.name}}</option>
+                </select>
+            </div>
+
+        <!-- Машина -->
+
+          <div class="form-group">
+            <div class="form-check d-flex justify-content-start">
+            <input
+              v-model="vol.car"
+               class="form-check-input"
+              type="checkbox"
+              name="car"
+            />
+            <label class="text-left" for="car">Есть автомобиль</label>
+            </div>
+          </div>
+
+         <!-- Номер волонтёра-->
+ 
+        <!-- В ЭТИ ФОРМЫ ЕБНУТЬ ПОИСК ВМЕСТЕ СО СПИСКОМ ТАМ БЫЛ ПРИМЕР ГДЕ_ТО НАЙДИ -->
+          <div class="form-group welcome2 d-flex justify-content-center">
+            <button class="btn my-4 " :disabled="loading">
+              <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <span>Сохранить</span>
+            </button>
+          </div>
       </form>
-    </div>
+      <div
+        v-if="message"
+        class="alert"
+        :class="successful ? 'alert-success' : 'alert-danger'"
+      >{{message}}</div>
+      
+  </div>    
   </div>
 
  <div class="row">
@@ -108,47 +166,84 @@
 </template>
 
 <script>
+import {mapActions, mapGetters,mapState} from 'vuex'
 import User from '../models/user';
+import Vol from '../models/vol';
 
 export default {
   name: 'Login',
   data() {
     return {
-      user: new User('', ''),
+      user: new User('', '',''),
+      vol: new Vol('','','','','','','','','','','',''),
       loading: false,
+      phone: '',
+      gender: '',
+      submitted: false,
+      successful: false,
       message: ''
     };
   },
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
+    ...mapState([
+        'cities'
+    ]),
+    currentUser() {
+    return this.$store.state.auth.user;
     }
   },
-  created() {
-
+  mounted() {
+    this.GET_CITIES()
+    this.phone = this.currentUser.user.phone
+    this.vol.city = this.currentUser.user.city
+    this.user.email = this.currentUser.user.email
+    this.vol.car = this.currentUser.user.car
+    this.vol.name = this.currentUser.user.name
   },
-  methods: {
-    handleLogin() {
-      this.loading = true;
-      this.$validator.validateAll().then(isValid => {
-        if (!isValid) {
-          this.loading = false;
-          return;
-        }
+ methods: {
+    ...mapActions([
+          'GET_CITIES',
+          'EDIT_NAME'
+      ]),
 
-        if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-            () => {
-              this.$router.push('/profile');
+    acceptNumber() {
+      var x = this.phone.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+      this.phone = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    },
+    handlePass(){
+
+    },
+    handleSet() {
+      this.message = '';
+      this.loading = true;
+      this.submitted = true;
+      this.vol.phone = this.phone;
+
+      if(this.vol.car === true){
+        this.vol.car = 'есть'
+      } else {
+        this.vol.car = 'нет'
+      }
+
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+             this.loading = false;
+              this.$store.dispatch('auth/editVol', {car: this.vol.car, city: this.vol.city, email: this.user.email, phone: this.vol.phone, id_vol: this.currentUser.user.id_vol}).then(
+            data => {
+              this.message = 'Данные успешно изменены. Для корректного отображения изменений перезайдите в аккаунт';
+              console.log(data)
+              this.successful = true;
             },
             error => {
-              this.loading = false;
               this.message =
                 (error.response && error.response.data && error.response.data.message) ||
                 error.message ||
                 error.toString();
+              this.successful = false;
             }
           );
+          this.EDIT_NAME( {id_vol:this.currentUser.user.id_vol, name:this.vol.name})
+
         }
       });
     }
@@ -164,22 +259,10 @@ label {
 
 .card-container {
   max-width: 500px !important;
-  padding: 40px 40px;
+  padding: 15px 40px;
     margin: 0 auto 25px;
-//   margin-top: 50px;
 }
 
-// .card {
-//   background-color: #f7f7f7;
-//   padding: 20px 25px 30px;
-
-//   -moz-border-radius: 2px;
-//   -webkit-border-radius: 2px;
-//   border-radius: 2px;
-//   -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-//   -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-//   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-// }
 
 .profile-img-card {
   width: 96px;

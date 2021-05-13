@@ -4,25 +4,13 @@
     <b-container class="bv-example-row ">
         <b-row>
             <b-col sm="4" >
-                <orders-filter :isDropped="isDroppedToChild" @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat"/>
-                
-                <!-- Районы -->
-                <p class="my-1 text-left">Район:</p>
-                <b-form-select size="sm" v-model="selectedDistr" >
-                    <b-form-select-option :value="null">Все</b-form-select-option>
-                    <option v-for="order in orders"
-                    :key="order.id_ord"
-                    v-bind:value="order.district">{{order.district}}</option>
-                </b-form-select>
-                <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
+                <orders-filter @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat" @clickedDistr="onClickChildDistr"/>
                 
                 <!-- Кнопки -->
                 <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn-out mx-1 my-1">
                         Применить фильтры
                 </button>
-                <button @click="dropFilters" type="button" class="btn-out mx-1 my-1">
-                        Сбросить
-                </button>
+
             </b-col>
         <!-- Второй столбик -->
             <b-col sm="8">
@@ -76,7 +64,6 @@ export default {
             selectedDistr: null,
             foundOrdersTitle: 'Найдено заказов:',
             search:'',
-            isDroppedToChild: false
         }
     },
     computed: {
@@ -118,7 +105,6 @@ export default {
             console.log(data);
         },
         filterAll(car,urg,selectedDistr,stat){
-             this.isDroppedToChild = false
             this.foundOrdersTitle = 'Найдено заказов:'
             console.log(car,urg,selectedDistr,stat)
             this.ordersFiltered=this.withFilter(car,urg,selectedDistr,stat);
@@ -126,11 +112,7 @@ export default {
                 this.foundOrdersTitle = 'Заказы не найдены'
             }
         },
-        dropFilters(){
-            this.isDroppedToChild = true
-            this.selectedDistr = null
-            // this.filterAll(this.car,this.urg,this.selectedDistr)
-        },
+
          onClickChild (value) {
             console.log(value) // someValue
             this.car = value
@@ -140,11 +122,14 @@ export default {
         },
          onClickChildStat (value) {
             this.stat = value
+        },
+         onClickChildDistr (value) {
+            this.selectedDistr = value
         }
     },
     mounted(){
         this.GET_ORDERS_API()
-        //this.ordersFiltered = orders
+
     }
 }
 </script>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import { auth } from './auth.module';
+import authHeader from '../services/auth-header';
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     personalOrders:[],
     orderDesc:[],
     cities:[],
-    districts:[]
+    districts:[],
+    vols:[]
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -30,11 +32,15 @@ export default new Vuex.Store({
     },
     SET_DISTRICTS_TO_STATE: (state,districts) => {
       state.districts = districts;
+    },
+    SET_VOLS_TO_STATE: (state,vols) => {
+      state.vols = vols;
     }
   },
   actions: {
     GET_ORDERS_API({commit}){
-      return axios('http://192.168.0.33:8081/api/orders', {
+      return axios('http://192.168.0.33:8081/order/orders', {
+        headers: authHeader() ,
         method: "GET"
       })
       .then ((orders)=>{
@@ -47,7 +53,8 @@ export default new Vuex.Store({
       })
     },
     GET_ORDERS_PERSONAL_API({commit},idus){
-      return axios('http://192.168.0.33:8081/api/allOrderVolunteerApp/'+idus, {
+      return axios('http://192.168.0.33:8081/order/allOrderVolunteerApp/'+idus, {
+        headers: authHeader() ,
         method: "GET"
       })
       .then ((personalOrders)=>{
@@ -60,7 +67,8 @@ export default new Vuex.Store({
       })
     },
     GET_ORDER_INFO({commit},idord){
-      return axios('http://192.168.0.33:8081/api/orders/'+idord, {
+      return axios('http://192.168.0.33:8081/order/orders/'+idord, {
+        headers: authHeader() ,
         method: "GET"
       })
       .then ((orderDesc)=>{
@@ -73,7 +81,7 @@ export default new Vuex.Store({
       })
     },
     GET_CITIES({commit}){
-      return axios('http://localhost:8081/api/city', {
+      return axios('http://localhost:8081/city/city', {
         method: "GET"
       })
       .then ((cities)=>{
@@ -86,7 +94,7 @@ export default new Vuex.Store({
       })
     },
     GET_DISTRICTS({commit}){
-      return axios('http://localhost:8081/api/district', {
+      return axios('http://localhost:8081/district/district', {
         method: "GET"
       })
       .then ((districts)=>{
@@ -98,9 +106,38 @@ export default new Vuex.Store({
         return error;
       })
     },
+    GET_VOLS({commit}){
+      return axios('http://localhost:8081/cord/volunteersList/status/1', {
+        headers: authHeader() ,
+        method: "GET"
+      })
+      .then ((vols)=>{
+        commit('SET_VOLS_TO_STATE',vols.data);
+        return vols;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
+    GET_OFFERS({commit},vol){
+      return axios('http://localhost:8081/vol/vol/offers/'+vol, {
+        headers: authHeader() ,
+        method: "GET"
+      })
+      .then ((orders)=>{
+        commit('SET_ORDERS_TO_STATE',orders.data);
+        return orders;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
     ACCEPT_ORDER({commit},accdata){
       console.log('перед отправкой ',accdata)
       return axios('http://192.168.0.33:8081/api/acceptOrder/'+accdata, {
+        headers: authHeader() ,
         method: "GET"
       })
       .then ((response)=>{
@@ -112,9 +149,48 @@ export default new Vuex.Store({
         return error;
       })
     },
-    EDIT_ORDER({commit},idord){
-      return axios('http://192.168.0.33:8081/api/orders/'+idord, {
-        method: "PUT"
+    OFFER({commit},{vol,cord,ord}){
+      console.log('перед отправкой offer',vol,cord,ord)
+      return axios('http://localhost:8081/cord/offers', {
+        data: {
+          id_vac: cord,
+          vol: vol,
+          id_order: ord
+        },
+        headers: authHeader() ,
+        method: "POST"
+      })
+      .then ((response)=>{
+        console.log(response.data)
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
+    EDIT_NAME({commit},{id_vol,name}){
+      console.log('перед отправкой edit',id_vol,name)
+      return axios('http://localhost:8081/vol/volunteer/name/'+id_vol, {
+        data: {
+          name: name
+        },
+        headers: authHeader() ,
+        method: "POST"
+      })
+      .then ((response)=>{
+        console.log(response.data)
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
+    RESET_PASS_EMAIL({commit},email){
+      console.log('перед отправкой ',email)
+      return axios('http://localhost:8081/resetpassword/'+email, {
+        method: "GET"
       })
       .then ((response)=>{
         console.log(response.data)
@@ -127,7 +203,8 @@ export default new Vuex.Store({
     },
     CONFIRM_ORDER_CORD({commit},accdata){
       console.log('перед отправкой ',accdata)
-      return axios('http://192.168.0.33:8081/api/ordersConfirmation/'+accdata, {
+      return axios('http://192.168.0.33:8081/cord/ordersConfirmation/'+accdata, {
+        headers: authHeader() ,
         method: "GET"
       })
       .then ((response)=>{
@@ -146,6 +223,23 @@ export default new Vuex.Store({
   getters: {
     getOrderById: state => id => {
       return state.orders.find(order => order.id_ord === id);
+    },
+    getVolFilter: state => (car,city) => {
+      console.log(car,city);
+      let volsSort = state.vols
+      if (car !== null)
+      {
+        if(car === 'да'){
+          car = 'есть'
+        }
+        volsSort = volsSort.filter(vol => (vol.car === car))
+      }
+      if (city !== null)
+      {
+        volsSort = volsSort.filter(vol => vol.city === city)
+      }
+      volsSort = volsSort.filter(vol => vol.black_list === 'нет')
+      return volsSort
     },
     getDistrictByCity: state => city => {
       console.log(city);

@@ -3,7 +3,7 @@
   <div class="catalog-item mx-auto my-2 p-4">
         <h6 id="item-header" class="catalog-item_title content-center">{{order_data.name}}</h6>
         <p class="catalog-item_adr">{{order_data.city}}</p>
-        <p class="catalog-item_descr">{{order_data.ord_descript}}</p>
+        <p class="catalog-item_descr">{{order_data.ord_descript | truncate(120, '...')}}</p>
         <p class="catalog-item_stat">{{order_data.ordstatus}}</p>
         <p >Срочность: {{order_data.urgency}}</p>
         <p >Автомобиль: {{order_data.car}}</p>
@@ -27,7 +27,6 @@ export default {
     methods:{
         sendDataToParent(){
             this.$emit('sendID',this.order_data.id_ord);
-            
         }
     }
 }

@@ -6,7 +6,13 @@ import store from './store'
 //import { ValidationProvider } from 'vee-validate';
 
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
-import  VeeValidate  from "vee-validate";
+import VeeValidate, { Validator } from 'vee-validate';
+import ru from 'vee-validate/dist/locale/ru';
+
+Validator.localize('ru', ru);
+Vue.use(VeeValidate, {
+  locale: 'ru',
+});
 
 import '@/assets/style.css'
 
@@ -20,7 +26,6 @@ var filter = function(text, length, clamp){
 
 Vue.filter('truncate', filter);
 
-Vue.use(VeeValidate);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 //Vue.component('ValidationProvider', ValidationProvider);

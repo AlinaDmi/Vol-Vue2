@@ -7,8 +7,7 @@
 			<img src="img/svg/ava.png" class="img-fluid" id="ava">
 		</div>
         <div class="col-lg-6 cont">
-            <h2 v-if="person.roleName === 'ROLE_VOL'">{{curPerson.vol_name}}</h2>
-            <h2 v-else>{{curPerson.name}}</h2>
+            <h2>{{curPerson.name}}</h2>
 			
             <p class="type-user">{{role}}</p>
 
@@ -102,10 +101,10 @@ export default {
     computed:{
         curPerson(){
             if (this.person.roleName === 'ROLE_VOL'){
-                return this.person.volunteer
+                return this.person.user
             } else {
                 this.role = 'Координатор'
-                return this.person.cord
+                return this.person.user
             }
             
         }

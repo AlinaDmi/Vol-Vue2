@@ -16,20 +16,31 @@
     <div class="mt-3">Selected: <strong>{{ selectedStat }}</strong></div>
     </div>
 
-    <!-- <button @click="dropFilters" type="button" class="btn btn-outline-info mx-auto d-block">
-        Сбросить
-    </button> -->
+    <p class="my-1 text-left">Район:</p>
+                <b-form-select size="sm" v-model="selectedDistr" @change="onChangeDistr()">
+                 <b-form-select-option :value="null">Все</b-form-select-option>
+                    <option v-for="district in districts"
+                    :key="district.iddistrict"
+                    v-bind:value="district.name">{{district.name}}</option>
+                </b-form-select>
+                <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
+     <button @click="dropAll" type="button" class="btn-out mx-1 my-1">
+                        Сбросить
+       </button>           
+
   </div>
 </template>
 
 <script>
+import {mapActions, mapGetters,mapState} from 'vuex'
   export default {
     data() {
       return {
         selected: null,
         selectedUrg: null,
         selectedStat: null,
-        isDroppedLocal: false,
+        selectedDistr: null,
+        districts: [],
         options: [
           { value: null, text: 'Всё' },
           { value: 'да', text: 'Необходим' },
@@ -45,45 +56,32 @@
           { value: 'принят к исполнению', text: 'Принят к исполнению' }]
       }
     },
-     props:
-        ['isDropped'],
-      watch: { 
-      isDropped: {
-            // the callback will be called immediately after the start of the observation
-           immediate: true, 
-          handler (val, oldVal) {
-              console.log('Prop changed: ', val, ' | was: ', oldVal);
-              this.isDroppedLocal = val
-              if(this.isDroppedLocal === true){
-            console.log('ready to drop')
-            this.selected = null,
-            this.selectedUrg = null,
-            this.selectedStat = null,
-            this.$emit('clickedCar', this.selected),
-            this.$emit('clickedUrg', this.selectedUrg),
-            this.$emit('clickedStat', this.selectedStat),
-            this.isDroppedLocal=false
-            console.log('dropped')
-              }
-           }
-       }
-      },
+
+      mounted() {
+      this.districts = this.GET_DISTRICTS()
+
+      this.$store.watch(
+      state => state.districts,
+      () => {
+        this.districts = this.getDistrictByCity(this.currentUser.user.city)
+        console.log("update");
+      }
+    );
+    },
      computed: {
      currentUser() {
       return this.$store.state.auth.user;
     },
-        // droppAll(){
-        //   if(this.isDropped === true){
-        //     console.log('ready to drop',this.isDropped)
-        //     // this.selected = null,
-        //     // this.selectedUrg = null,
-        //     // this.$emit('clickedCar', this.selected),
-        //     // this.$emit('clickedUrg', this.selectedUrg)
-        //   }
+    ...mapGetters([
+       'getDistrictByCity'
+    ]),
 
-        // }
      },
+
     methods:{
+      ...mapActions([
+            'GET_DISTRICTS'
+        ]),
         onChange: function() {
         this.$emit('clickedCar', this.selected)
      },
@@ -93,15 +91,19 @@
           onChangeStat: function() {
         this.$emit('clickedStat', this.selectedStat)
      },
-      // dropMethod(selected,selectedUrg){
-      //   if(this.this.isDropped){
-      //       console.log('ready to drop',this.this.isDropped)
-      //       this.selected = null,
-      //       this.selectedUrg = null,
-      //       this.$emit('clickedCar', this.selected),
-      //       this.$emit('clickedUrg', this.selectedUrg)
-      //     }
-      // }
+          onChangeDistr: function() {
+        this.$emit('clickedDistr', this.selectedDistr)
+     },
+      dropAll(){
+          this.selected = null,
+            this.selectedUrg = null,
+            this.selectedStat = null,
+            this.selectedDistr = null,
+            this.$emit('clickedCar', this.selected),
+            this.$emit('clickedUrg', this.selectedUrg),
+            this.$emit('clickedStat', this.selectedStat),
+             this.$emit('clickedDistr', this.selectedDistr)
+      }
     }
   }
 </script>

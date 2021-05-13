@@ -67,7 +67,7 @@
         <b-collapse id="navbar-toggle-collapse" is-nav>
           <!-- For all -->
           <b-navbar-nav class="ml-auto">
-            <li class="nav-item">
+            <li v-if="!currentUser" class="nav-item">
               <router-link to="/" class="nav-link">
                 Главная
               </router-link>
@@ -94,9 +94,12 @@
               </li>
         
           <!-- Logged in -->
+            <li v-if="currentUser && currentUser.roleName === 'ROLE_VOL'" class="nav-item ">
+              <router-link class="nav-link" to="/offers">Предложения</router-link>
+            </li> 
             <li v-if="currentUser" class="nav-item ">
               <router-link class="nav-link" to="/catalog">Заказы</router-link>
-            </li> 
+            </li>
             <li v-if="currentUser" class="nav-item">
               <router-link to="/profile" class="nav-link">
                 Профиль

@@ -1,9 +1,9 @@
 <template>
   <div class="card-container">
- 
-      <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма подачи заявки</h3>
+
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
+          <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма подачи заявки</h3>
             <!-- Название -->
           <div class="form-group my-1 text-left">
             <label for="ord_name">Название</label>
@@ -28,6 +28,7 @@
               v-model="order.ord_descript"
               v-validate="'required|min:3|max:700'"
               type="text"
+              maxlength = "700"
               class="form-control"
               name="ord_descript"
             />
@@ -195,7 +196,8 @@ export default {
         immediate: true, 
         deep: true,
         handler (val, oldVal) {
-                this.order.ord_name = this.orderInfo.name
+            if(val !== undefined){
+              this.order.ord_name = this.orderInfo.name
                 this.order.ord_descript = this.orderInfo.ord_descript
                 this.selectedCity = this.orderInfo.city
                 this.districtsByCity(this.selectedCity)
@@ -207,7 +209,8 @@ export default {
                 if(this.orderInfo.car === 'да'){
                     this.order.car_req = true
                 }
-           
+            }
+                
         }
     }
 

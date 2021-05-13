@@ -8,6 +8,7 @@ import Reg from '../views/Register.vue'
 import Settings from '../views/Settings.vue'
 import SendOrd from '../views/SendOrder.vue'
 import OrdDesc from '../views/OrderDescription.vue'
+import Offers from '../views/Offers.vue'
 
 Vue.use(VueRouter)
 
@@ -19,6 +20,7 @@ const routes = [
   {path: '/register', component: Reg},
   {path: '/settings', component: Settings},
   {path: '/sendorder', component: SendOrd},
+  {path: '/offers', component: Offers},
   {path: '/orddesc/:ordId', name:'orderdesc', component: OrdDesc, props: true},
   { path: '*', redirect: '/' }
 ]

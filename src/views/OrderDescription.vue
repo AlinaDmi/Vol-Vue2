@@ -9,7 +9,7 @@
         <button v-if="orderDesc.ordstatus==='активен' && currentUser.roleName === 'ROLE_VOL'"  type="button" @click="acceptOrder(acceptData2)" class="btn">Принять к исполнению</button>
         <button v-else-if="orderDesc.ordstatus==='принят к исполнению'" type="button" @click="acceptOrder(acceptData2)" class="btn">Завершить</button>
        
-        <offer-modal v-else-if="orderDesc.ordstatus==='активен' && currentUser.roleName === 'ROLE_CORD'"/>
+        <offer-modal :orderInfo="orderDesc" v-else-if="orderDesc.ordstatus==='активен' && currentUser.roleName === 'ROLE_CORD'"/>
        
         <div v-else-if="orderDesc.ordstatus==='в рассмотрении'">
         <button  type="button" @click="ConfirmOrder(acceptData2)" class="btn">Подтвердить</button>
@@ -71,12 +71,11 @@ export default {
       this.GET_ORDER_INFO(this.ordIdData);
       this.stat = this.orderDesc.ordstatus
       if(this.$store.state.auth.user.roleName === 'ROLE_VOL'){
-        this.idus = this.$store.state.auth.user.volunteer.id_vol;
-        this.acceptData2 = this.ordIdData+','+this.idus;
+        this.idus = this.$store.state.auth.user.user.id_vol;
       } else{
-        this.idus = this.$store.state.auth.user.cord.id_cord;
-        this.acceptData2 = this.ordIdData+','+this.idus;
+        this.idus = this.$store.state.auth.user.user.id_cord;
       }
+      this.acceptData2 = this.ordIdData+','+this.idus;
       
       
       // this.$store.watch(

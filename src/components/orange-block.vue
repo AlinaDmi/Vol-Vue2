@@ -9,7 +9,7 @@
 			<p class="lead">{{orgBlDesc}}</p>
 			
 		</div>
-		</div>
+	</div>
 </div>
 </template>
 

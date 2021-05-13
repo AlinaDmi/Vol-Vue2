@@ -54,21 +54,33 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    
+    editVol({ commit }, {car,city,email,phone,id_vol}) {
+      return AuthService.editVol(car,city,email,phone,id_vol).then(
+        response => {
+          console.log(response.data)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+    },
+    register({ commit }, {user,vol}) {
+      console.log('С модуля лога ',user,vol)
+      return AuthService.register(user,vol).then(
+        response => {
+          commit('registerSuccess');
+          console.log('Респонс ',response.data,' Дата респонса ', response)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          commit('registerFailure');
+          return Promise.reject(error);
+        }
+      );
     }
-
-    //,
-    // register({ commit }, user) {
-    //   return AuthService.register(user).then(
-    //     response => {
-    //       commit('registerSuccess');
-    //       return Promise.resolve(response.data);
-    //     },
-    //     error => {
-    //       commit('registerFailure');
-    //       return Promise.reject(error);
-    //     }
-    //   );
-    // }
   },
   mutations: {
     loginSuccess(state, user) {

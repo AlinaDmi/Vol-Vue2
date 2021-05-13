@@ -86,9 +86,9 @@ hr.light{
   border: 2px solid ;
   background-color: white;
   border-radius: 50px;
-  
+  font-size: medium;
   cursor: pointer;
-  padding: 7px 14px;
+  padding: 2px 7px;
   border-color: #7EBDC2;
   color: rgb(35, 137, 141);
 }
