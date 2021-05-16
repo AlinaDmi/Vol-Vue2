@@ -59,6 +59,18 @@ export const auth = {
     editVol({ commit }, {car,city,email,phone,id_vol}) {
       return AuthService.editVol(car,city,email,phone,id_vol).then(
         response => {
+          console.log('эдит вол модуль ',response.data)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+    },
+
+    editCord({ commit }, {name,email,phone,id_cord}) {
+      return AuthService.editCord(name,email,phone,id_cord).then(
+        response => {
           console.log(response.data)
           return Promise.resolve(response.data);
         },

@@ -3,7 +3,14 @@
 
       <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
-          <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма регистрации</h3>
+          <h3 class="d-flex justify-content-center">Форма регистрации</h3>
+
+            <p class="my-1 text-left">Тип пользователя</p>
+            <select v-model="isVol" class="form-control" size="sm" name="userType">
+            <option :value="true">Волонтёр</option>   
+            <option :value="false">Координатор</option>   
+            </select>
+          
             <!-- Логин -->
           <div class="form-group my-1 text-left">
             <label for="username">Логин</label>
@@ -163,8 +170,7 @@
             >{{errors.first('unumber')}}</div>
           </div>  
         
-        <div v-if="!isEdited">
-        </div>    
+
         <!-- В ЭТИ ФОРМЫ ЕБНУТЬ ПОИСК ВМЕСТЕ СО СПИСКОМ ТАМ БЫЛ ПРИМЕР ГДЕ_ТО НАЙДИ -->
           <div class="form-group welcome2 d-flex justify-content-center">
             <button class="btn my-4 " :disabled="loading">
@@ -183,7 +189,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters,mapState} from 'vuex'
+import {mapActions,mapState} from 'vuex'
 import User from '../models/user';
 import Vol from '../models/vol';
 
@@ -197,37 +203,12 @@ export default {
       phone: '',
       gender: 'мужской',
       selectedCity: null,
+      isVol: true,
       submitted: false,
       successful: false,
       message: ''
     };
   },
-  props:
-        ['isEdited','orderInfo','id_ord'],
-   watch: {
-    orderInfo: {
-        immediate: true, 
-        deep: true,
-        handler (val, oldVal) {
-            // if(val !== undefined){
-            //   this.order.ord_name = this.orderInfo.name
-            //     this.order.ord_descript = this.orderInfo.ord_descript
-            //     this.selectedCity = this.orderInfo.city
-            //     this.districtsByCity(this.selectedCity)
-            //     this.selectedDistr = this.orderInfo.district
-            //     this.order.adress = this.orderInfo.adress
-            //     if(this.orderInfo.urgency === 'срочно'){
-            //         this.order.urgency = true
-            //     }
-            //     if(this.orderInfo.car === 'да'){
-            //         this.order.car_req = true
-            //     }
-            // }
-                
-        }
-    }
-
-  },     
   computed: {
       ...mapState([
             'cities'
@@ -266,7 +247,6 @@ export default {
 
       this.$validator.validate().then(isValid => {
         if (isValid) {
-          if (this.isEdited !== true){
               this.$store.dispatch('auth/register', {user: this.user, vol: this.vol}).then(
             data => {
               this.message = data;
@@ -284,22 +264,6 @@ export default {
               this.successful = false;
             }
           );
-          } else {
-            //ЧЕКНИ НА ПУТ И ПОСТ
-             this.$store.dispatch('auth/editOrder', {order: this.order, id_ord: this.id_ord}).then(
-            data => {
-              this.message = 'Заказ успешно обновлён';
-              this.successful = true;
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-              this.successful = false;
-            }
-          );
-          }
         }
       });
     }

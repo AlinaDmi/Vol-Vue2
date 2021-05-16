@@ -22,9 +22,6 @@
 			</div>
 			<p>Выполнено заказов:</p>
 			
-			<!-- Добавить переклбчатель активности -->
-			 <!-- https://itchief.ru/html-and-css/toggle-switch  -->
-			
 			<div class="col-lg-6 text-right">
 				<router-link to="/settings">
 					<img src="../assets/pics/settings.svg" class="img-fluid icon rot">

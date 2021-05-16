@@ -57,6 +57,16 @@ class AuthService {
     });
   }
 
+  editCord(name,email,phone,id_cord) {
+    return axios.post(API_URL + 'cord/updateCord/' + id_cord, {
+      name,
+      email,
+      phone
+    },
+      { headers: authHeader()
+    });
+  }
+
   register(user,vol) {
     return axios.post(API_URL + 'registerVol', {
       appUser: user,

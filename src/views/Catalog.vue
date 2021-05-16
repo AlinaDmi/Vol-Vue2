@@ -4,10 +4,10 @@
     <b-container class="bv-example-row ">
         <b-row>
             <b-col sm="4" >
-                <orders-filter @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat" @clickedDistr="onClickChildDistr"/>
+                <orders-filter @clickedCar="onClickChild" @clickedUrg="onClickChildUrg" @clickedStat="onClickChildStat" @clickedDistr="onClickChildDistr" @clickedCity="onClickChildCity"/>
                 
                 <!-- Кнопки -->
-                <button @click="filterAll(car,urg,selectedDistr,stat)" type="button" class="btn-out mx-1 my-1">
+                <button @click="filterAll(car,urg,selectedDistr,stat,selectedCity)" type="button" class="btn-out mx-1">
                         Применить фильтры
                 </button>
 
@@ -46,8 +46,7 @@ import {mapActions, mapGetters,mapState} from 'vuex'
 import OrangeBlock from '../components/orange-block.vue'
 import OrdersFilter from '../components/orders-filter.vue'
 
-// ВОЛОНТЁРУ ТОК С ЕГО ГОРОДОМ БЛЯТЬ СДЕЛАЙ (ну и чтоб ток которые можно принять как ислам)
-// можно ли сделать поиск компонентом? наверное да но если время будет поразберись
+
 export default {
     name:'catalog',
     components: {
@@ -62,6 +61,7 @@ export default {
             stat:null,
             ordersFiltered:[],
             selectedDistr: null,
+            selectedCity: null,
             foundOrdersTitle: 'Найдено заказов:',
             search:'',
         }
@@ -73,6 +73,9 @@ export default {
            ...mapGetters([
             'withFilter'
         ]),
+        currentUser() {
+        return this.$store.state.auth.user;
+        },
         ordersCount(){
             if(this.foundOrdersTitle === 'Найдено заказов:'){
                 return this.filteredOrdersSearch.length;
@@ -104,10 +107,15 @@ export default {
         showChildId(data){
             console.log(data);
         },
-        filterAll(car,urg,selectedDistr,stat){
+        filterAll(car,urg,selectedDistr,stat,selectedCity){
+            if (this.currentUser.roleName === 'ROLE_VOL'){
+                stat = 'активен'
+                selectedCity = this.currentUser.user.selectedCity
+            }
+
             this.foundOrdersTitle = 'Найдено заказов:'
-            console.log(car,urg,selectedDistr,stat)
-            this.ordersFiltered=this.withFilter(car,urg,selectedDistr,stat);
+            console.log(car,urg,selectedDistr,stat,selectedCity)
+            this.ordersFiltered=this.withFilter(car,urg,selectedDistr,stat,selectedCity);
             if(!this.ordersFiltered.length){
                 this.foundOrdersTitle = 'Заказы не найдены'
             }
@@ -125,11 +133,15 @@ export default {
         },
          onClickChildDistr (value) {
             this.selectedDistr = value
+        },
+         onClickChildCity (value) {
+            this.selectedCity = value
         }
     },
     mounted(){
         this.GET_ORDERS_API()
-
+        this.filterAll(this.car,this.urg,this.selectedDistr,this.stat,this.selectedCity)
+        
     }
 }
 </script>

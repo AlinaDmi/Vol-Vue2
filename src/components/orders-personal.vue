@@ -7,7 +7,7 @@
                 <p> <br> {{order_data.name | truncate(20, '...')}}</p>
             </b-col>
             <b-col>
-                <p>Дата принятия <br> {{order_data.date_app | truncate(10, '')}}</p>
+                <p>Дата размещения <br> {{order_data.date_app | truncate(10, '')}}</p>
             </b-col>
             <b-col>
                 <p> Дата завершения <br> {{finish | truncate(10, '')}}</p>

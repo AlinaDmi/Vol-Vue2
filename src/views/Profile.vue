@@ -41,6 +41,8 @@ export default {
       this.role = this.$store.state.auth.user.roleName;
       if(this.role === 'ROLE_VOL'){
         this.idus = this.$store.state.auth.user.user.id_vol;
+      } else {
+        this.idus = this.$store.state.auth.user.user.id_cord;
       }
       return this.$store.state.auth.user;
     },
@@ -51,12 +53,18 @@ export default {
 
   methods: {
         ...mapActions([
-            'GET_ORDERS_PERSONAL_API'
+            'GET_ORDERS_PERSONAL_API',
+            'GET_ORDERS_PERSONAL_DONE',
+            'GET_ORDERS_PERSONAL_CORD'
         ]),
     },
   mounted() {
     if(this.role === 'ROLE_VOL'){
       this.GET_ORDERS_PERSONAL_API(this.idus)
+      this.GET_ORDERS_PERSONAL_DONE(this.idus)
+    }
+     if(this.role === 'ROLE_CORD'){
+      this.GET_ORDERS_PERSONAL_CORD(this.idus)
     }
     if (!this.currentUser) {
       this.$router.push('/login');

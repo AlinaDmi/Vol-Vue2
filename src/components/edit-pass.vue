@@ -1,33 +1,65 @@
 <template>
 <div class="col-md-12">
  <div class="card-container">
-  <!-- Пароль --> 
-  <form name="form" @submit.prevent="handlePas">
-          <div class="input-group">
-            <label for="password" class="mr-1">Пароль</label>
-
-                <div class="input-fields d-flex">
-                    <input v-validate="'required'" name="password" type="password" class="form-control mr-1" placeholder="Password" ref="password">
-
-                    <input v-validate="'required|confirmed:password'" name="password_confirmation" class="form-control" type="password" placeholder="Повтор пароля" data-vv-as="password">
-                </div>
+  
+            <div class="card-body d-flex justify-content-center">
+                <!-- Custom switch -->
+                <p class="custom-control custom-switch custom-switch-lg">
+                    <input class="custom-control-input custom-control-input-warning" @change="onChange()" id="customSwitch11" v-model="status" type="checkbox">
+                    <label class="custom-control-label" for="customSwitch11">Профиль активен</label>
+                    <small v-if="currentUser.roleName === 'ROLE_VOL'" class="form-text text-muted">При неактивном статусе нельзя принимать заказы, а также координаторы не смогут присылать вам предложения</small>
+            
+                </p>
             </div>
-                <!-- ERRORS -->
-
-            <div v-if="errors.has('password')">
-                {{ errors.first('password') }}
-            </div>
-            <div v-if="errors.has('password_confirmation')">
-                {{ errors.first('password_confirmation') }}
-            </div>
-  </form>
+     <div
+        v-if="message"
+        class="alert"
+        :class="successful ? 'alert-success' : 'alert-danger'"
+      >{{message}}</div>
   </div>
 </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
-
+  data() {
+    return {
+      status: '',
+      message:'',
+      successful: false
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+  methods: {
+      ...mapActions([
+        'CHANGE_STAT_CORD',
+        'CHANGE_STAT_VOL'
+    ]),
+    onChange() {
+      if(this.currentUser.roleName === 'ROLE_VOL'){
+        this.message = this.CHANGE_STAT_VOL(this.currentUser.user.id_vol)
+      } else {
+        this.message = this.CHANGE_STAT_CORD(this.currentUser.user.id_cord)
+      }
+      if(this.message){
+        this.successful = true
+        this.message = 'Данные успешно изменены. Для корректного отображения изменений перезайдите в аккаунт'
+      }
+    }
+  },
+  mounted () {
+    this.status = this.currentUser.user.status;
+    if (this.status === 'не активен') {
+      this.status = false
+    } else {
+      this.status = true
+    }
+  },
 }
 </script>
 <style scoped lang="scss">
@@ -43,7 +75,10 @@ label {
 
 }
 
-
+body {
+    min-height: 100vh;
+    background: #121618;
+}
 .profile-img-card {
   width: 96px;
   height: 96px;

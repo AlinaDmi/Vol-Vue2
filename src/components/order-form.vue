@@ -6,36 +6,36 @@
           <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма подачи заявки</h3>
             <!-- Название -->
           <div class="form-group my-1 text-left">
-            <label for="ord_name">Название</label>
+            <label for="Название">Название</label>
             <input
               v-model="order.ord_name"
               v-validate="'required|min:3|max:35'"
               type="text"
               class="form-control"
-              name="ord_name"
+              name="Название"
             />
-            <small id="emailHelp" class="form-text text-muted">Продукты, Доставка, Лекарства или схожее</small>
+            <small class="form-text text-muted">Продукты, Доставка, Лекарства или схожее</small>
             <div
-              v-if="submitted && errors.has('ord_name')"
+              v-if="submitted && errors.has('Название')"
               class="alert-danger"
-            >{{errors.first('ord_name')}}</div>
+            >{{errors.first('Название')}}</div>
           </div>
 
             <!-- Описание -->
            <div class="form-group my-1 text-left">
-            <label for="ord_descript" class="my-1 text-left">Подробное описание</label>
+            <label for="Описание" class="my-1 text-left">Подробное описание</label>
             <textarea
               v-model="order.ord_descript"
               v-validate="'required|min:3|max:700'"
               type="text"
-              maxlength = "700"
+              maxlength="700"
               class="form-control"
-              name="ord_descript"
+              name="Описание"
             />
             <div
-              v-if="submitted && errors.has('ord_descript')"
+              v-if="submitted && errors.has('Описание')"
               class="alert-danger"
-            >{{errors.first('ord_descript')}}</div>
+            >{{errors.first('Описание')}}</div>
           </div>
 
         <!-- Город -->
@@ -48,7 +48,6 @@
                     name="city"
                     @change="districtsByCity(selectedCity)"
                     class="form-control" id="city">
-                 <option :value="null">Выберите город</option>   
                 <option v-for="city in cities"
                     :key="city.idcity"
                     v-bind:value="city.name">{{city.name}}</option>
@@ -62,7 +61,6 @@
                     v-validate="'required'"
                     name="district"
                     class="form-control" id="district">
-                 <option :value="null">Выберите район</option>  
                 <option v-for="district in districts"
                     :key="district.iddistrict"
                     v-bind:value="district.name">{{district.name}}</option>
@@ -71,19 +69,19 @@
 
             <!-- Улица, дом -->
             <div class="form-group my-1 text-left">
-            <label for="adress" >Адрес</label>
+            <label for="Адрес" >Адрес</label>
             <input
               v-model="order.adress"
               v-validate="'required|min:3|max:35'"
               type="text"
               class="form-control"
-              name="adress"
+              name="Адрес"
               placeholder="Улица, дом, квартира"
             />
             <div
-              v-if="submitted && errors.has('adress')"
+              v-if="submitted && errors.has('Адрес')"
               class="alert-danger"
-            >{{errors.first('adress')}}</div>
+            >{{errors.first('Адрес')}}</div>
           </div>
 
         <!-- Чекбоксы -->
@@ -125,15 +123,14 @@
               class="form-control"
               name="cus_name"
             />
-            <div
-              v-if="submitted && errors.has('cus_name')"
-              class="alert-danger"
-            >{{errors.first('cus_name')}}</div>
-          </div>
+          <div
+            v-if="submitted && errors.has('cus_name')"
+            class="alert-danger"
+          >Поле обязательно для заполнения</div>
+        </div>
 
           <!-- Телефон -->
 
-          <!-- ОТФОРМАТИРОВАТЬ И ПОСОМТРЕТЬ ВИ ВАЛИДЕЙТ НА МЫЛО И ПРОЧЕЕ И НЕ ЗАБЫТЬ ДОБАВИТЬ СТАТУС -->
           <div class="form-group my-1 text-left">
             <label for="cusPhone">Телефон для связи</label>
             <input
@@ -145,10 +142,10 @@
               placeholder="(xxx)xxx-xxxx"
               @input="acceptNumber"
             />
-            <div
-              v-if="submitted && errors.has('cusPhone')"
-              class="alert-danger"
-            >{{errors.first('cusPhone')}}</div>
+          <div
+            v-if="submitted && errors.has('cusPhone')"
+            class="alert-danger"
+          >Поле обязательно для заполнения</div>
           </div>
         </div>
           <!-- В ЭТИ ФОРМЫ ЕБНУТЬ ПОИСК ВМЕСТЕ СО СПИСКОМ ТАМ БЫЛ ПРИМЕР ГДЕ_ТО НАЙДИ -->
@@ -180,8 +177,8 @@ export default {
       order: new Order('','','','','','','',''),
       customer: new Customer('',''),
       phone: '',
-      selectedCity: null,
-      selectedDistr: null,
+      selectedCity: 'Москва',
+      selectedDistr: 'Таганский район',
       districts: [],
       submitted: false,
       successful: false,
@@ -197,16 +194,16 @@ export default {
         deep: true,
         handler (val, oldVal) {
             if(val !== undefined){
-              this.order.ord_name = this.orderInfo.name
-                this.order.ord_descript = this.orderInfo.ord_descript
-                this.selectedCity = this.orderInfo.city
+              this.order.ord_name = this.orderInfo.order.name
+                this.order.ord_descript = this.orderInfo.order.ord_descript
+                this.selectedCity = this.orderInfo.order.city
                 this.districtsByCity(this.selectedCity)
-                this.selectedDistr = this.orderInfo.district
-                this.order.adress = this.orderInfo.adress
-                if(this.orderInfo.urgency === 'срочно'){
+                this.selectedDistr = this.orderInfo.order.district
+                this.order.adress = this.orderInfo.order.adress
+                if(this.orderInfo.order.urgency === 'срочно'){
                     this.order.urgency = true
                 }
-                if(this.orderInfo.car === 'да'){
+                if(this.orderInfo.order.car === 'да'){
                     this.order.car_req = true
                 }
             }
@@ -226,6 +223,7 @@ export default {
   mounted() {
       this.GET_CITIES(),
       this.GET_DISTRICTS()
+      this.districts = this.getDistrictByCity('Москва')
   },
   methods: {
       ...mapActions([
@@ -266,6 +264,7 @@ export default {
             data => {
               this.message = data;
               this.successful = true;
+              
             },
             error => {
               this.message =

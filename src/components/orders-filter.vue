@@ -3,30 +3,35 @@
 
     <p class="my-1 text-left">Автомобиль:</p>
     <b-form-select v-model="selected" :options="options" size="sm" @change="onChange()"></b-form-select>
-    <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
-  
-    
+   
     <p class="my-1 text-left">Срочность:</p>
     <b-form-select v-model="selectedUrg" :options="optionsUrg" size="sm" @change="onChangeUrg()"></b-form-select>
-    <div class="mt-3">Selected: <strong>{{ selectedUrg }}</strong></div>
+
 
     <div v-if="currentUser.roleName === 'ROLE_CORD'">
     <p class="my-1 text-left">Статус:</p>
-    <b-form-select v-model="selectedStat" :options="optionsStat" size="sm" @change="onChangeStat()"></b-form-select>
-    <div class="mt-3">Selected: <strong>{{ selectedStat }}</strong></div>
+    <b-form-select v-model="selectedStat" :options="optionsStat" size="sm" @change="onChangeStat()"></b-form-select>    
     </div>
+
+       <p class="my-1 text-left">Город:</p>
+                <b-form-select size="sm" v-model="selectedCity" @change="onChangeCity()">
+                 <b-form-select-option :value="null">Всё</b-form-select-option>
+                    <option v-for="city in cities"
+                    :key="city.idcity"
+                    v-bind:value="city.name">{{city.name}}</option>
+                </b-form-select>
 
     <p class="my-1 text-left">Район:</p>
                 <b-form-select size="sm" v-model="selectedDistr" @change="onChangeDistr()">
-                 <b-form-select-option :value="null">Все</b-form-select-option>
+                 <b-form-select-option :value="null">Всё</b-form-select-option>
                     <option v-for="district in districts"
                     :key="district.iddistrict"
                     v-bind:value="district.name">{{district.name}}</option>
                 </b-form-select>
-                <div class="mt-3">Selected: <strong>{{ selectedDistr }}</strong></div>
-     <button @click="dropAll" type="button" class="btn-out mx-1 my-1">
+
+     <button @click="dropAll" type="button" class="btn-out mx-1 my-2">
                         Сбросить
-       </button>           
+      </button>           
 
   </div>
 </template>
@@ -40,6 +45,7 @@ import {mapActions, mapGetters,mapState} from 'vuex'
         selectedUrg: null,
         selectedStat: null,
         selectedDistr: null,
+        selectedCity: null,
         districts: [],
         options: [
           { value: null, text: 'Всё' },
@@ -58,6 +64,7 @@ import {mapActions, mapGetters,mapState} from 'vuex'
     },
 
       mounted() {
+      this.GET_CITIES(),
       this.districts = this.GET_DISTRICTS()
 
       this.$store.watch(
@@ -72,6 +79,9 @@ import {mapActions, mapGetters,mapState} from 'vuex'
      currentUser() {
       return this.$store.state.auth.user;
     },
+      ...mapState([
+        'cities'
+    ]),
     ...mapGetters([
        'getDistrictByCity'
     ]),
@@ -80,7 +90,8 @@ import {mapActions, mapGetters,mapState} from 'vuex'
 
     methods:{
       ...mapActions([
-            'GET_DISTRICTS'
+            'GET_DISTRICTS',
+            'GET_CITIES'
         ]),
         onChange: function() {
         this.$emit('clickedCar', this.selected)
@@ -94,15 +105,22 @@ import {mapActions, mapGetters,mapState} from 'vuex'
           onChangeDistr: function() {
         this.$emit('clickedDistr', this.selectedDistr)
      },
+        onChangeCity: function() {
+        this.$emit('clickedCity', this.selectedCity)
+        this.districts = this.getDistrictByCity(this.selectedCity)
+     },
       dropAll(){
           this.selected = null,
             this.selectedUrg = null,
             this.selectedStat = null,
             this.selectedDistr = null,
+            this.selectedCity = null,
+            this.districts = null
+            this.$emit('clickedCity', this.selectedCity)
             this.$emit('clickedCar', this.selected),
             this.$emit('clickedUrg', this.selectedUrg),
             this.$emit('clickedStat', this.selectedStat),
-             this.$emit('clickedDistr', this.selectedDistr)
+            this.$emit('clickedDistr', this.selectedDistr)
       }
     }
   }

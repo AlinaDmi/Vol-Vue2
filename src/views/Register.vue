@@ -1,6 +1,6 @@
 <template>
 <div>
-  <orange-block org-bl-tit="Регистрация" org-bl-desc="Для регистрации в качестве волонтёра заполните форму регистрации"/>
+  <orange-block org-bl-tit="Регистрация" org-bl-desc="Для регистрации в качестве волонтёра или координатора заполните форму регистрации"/>
   <div class="col-md-12">
     <register-form />
   </div>
