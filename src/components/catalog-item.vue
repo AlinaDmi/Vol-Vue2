@@ -9,7 +9,7 @@
     <b-container class="my-3">
     <b-row>
       <b-col md class="my-0 py-0">
-        <p class="catalog-item_adr my-1"><b>{{order_data.city}}</b>,{{order_data.district}}</p>
+        <p class="catalog-item_adr my-1"><b>{{order_data.city}}</b>, {{order_data.district}}</p>
       </b-col>
       <b-col sm class="my-0 py-0">
         <p class="catalog-item_stat my-1"><b>Статус:</b> {{order_data.ordstatus}}</p>

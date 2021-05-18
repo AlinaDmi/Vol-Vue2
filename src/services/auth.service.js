@@ -1,6 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth-header';
-const API_URL = 'http://192.168.0.33:8081/';
+import {API_URL} from "../Config"
+
 
 class AuthService {
   login(user) {
@@ -74,12 +75,14 @@ class AuthService {
     });
   }
 
-  // register(user,vol) {
-  //   return axios.post(API_URL + 'registerVol', {
-  //     appUser: user,
-  //     volunteer: vol
-  //   });
-  // }
+  registerCord(user,cord) {
+    return axios.post(API_URL + 'registerCord', {
+      appUser: user,
+      cord: cord
+    });
+  }
+
+
 }
 
 export default new AuthService();

@@ -11,7 +11,7 @@
     <div v-if="currentUser.roleName === 'ROLE_CORD'">
     <p class="my-1 text-left">Статус:</p>
     <b-form-select v-model="selectedStat" :options="optionsStat" size="sm" @change="onChangeStat()"></b-form-select>    
-    </div>
+    
 
        <p class="my-1 text-left">Город:</p>
                 <b-form-select size="sm" v-model="selectedCity" @change="onChangeCity()">
@@ -20,7 +20,7 @@
                     :key="city.idcity"
                     v-bind:value="city.name">{{city.name}}</option>
                 </b-form-select>
-
+    </div>
     <p class="my-1 text-left">Район:</p>
                 <b-form-select size="sm" v-model="selectedDistr" @change="onChangeDistr()">
                  <b-form-select-option :value="null">Всё</b-form-select-option>

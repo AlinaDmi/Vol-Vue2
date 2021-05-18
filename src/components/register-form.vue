@@ -66,7 +66,7 @@
             <label for="password" class="mr-1">Пароль</label>
 
                 <div class="input-fields d-flex">
-                    <input v-validate="'required'" name="password" type="password" class="form-control mr-1" placeholder="Password" ref="password">
+                    <input v-validate="'required'" v-model="user.password" name="password" type="password" class="form-control mr-1" placeholder="Password" ref="password">
 
                     <input v-validate="'required|confirmed:password'" name="password_confirmation" class="form-control" type="password" placeholder="Повтор пароля" data-vv-as="password">
                 </div>
@@ -83,7 +83,7 @@
 
  
          <!-- ДР -->
-          <div class="form-group my-1 text-left">
+          <div v-if="isVol" class="form-group my-1 text-left">
             <label for="date_birth">Дата рождения</label>
             <input
               v-model="vol.date_birth"
@@ -101,7 +101,7 @@
           </div>    
 
                    <!-- Пол -->
-          <div class="form-group">
+          <div v-if="isVol"  class="form-group my-0">
             <div class="form-check d-flex justify-content-start">
             <input
               v-model="gender"
@@ -126,7 +126,7 @@
 
         <!-- Город -->
             
-            <div class="form-group my-1 text-left">
+            <div v-if="isVol" class="form-group my-1 text-left">
                 <label for="city">Город</label>
                 <select
                     v-model="selectedCity"
@@ -142,7 +142,7 @@
 
         <!-- Машина -->
 
-          <div class="form-group">
+          <div v-if="isVol" class="form-group">
             <div class="form-check d-flex justify-content-start">
             <input
               v-model="vol.car"
@@ -156,7 +156,7 @@
 
          <!-- Номер волонтёра-->
           <div class="form-group my-1 text-left">
-            <label for="unumber">Номер аккредитации волонтёра</label>
+            <label for="unumber">Номер аккредитации</label>
             <input
               v-model="vol.unumber"
               v-validate="'required|min:3|max:35'"
@@ -164,6 +164,7 @@
               class="form-control"
               name="unumber"
             />
+            <small class="form-text text-muted">Номер, выданный волонётрской организацией после прохождения обучения</small>
             <div
               v-if="submitted && errors.has('unumber')"
               class="alert-danger"
@@ -192,12 +193,14 @@
 import {mapActions,mapState} from 'vuex'
 import User from '../models/user';
 import Vol from '../models/vol';
+import Cord from '../models/cord';
 
 export default {
   name: 'VolRegForm',
   data() {
     return {
       vol: new Vol('','','','','','','','','','','',''),
+      cord: new Cord('','','','','','',''),
       user: new User('', '',''),
       loading: false,
       phone: '',
@@ -230,6 +233,8 @@ export default {
       this.message = '';
       this.loading = true;
       this.submitted = true;
+
+      if (this.isVol === true){
       this.vol.phone = this.phone;
       this.vol.name = this.user.username;
       this.vol.gender = this.gender;
@@ -244,26 +249,63 @@ export default {
       } else {
         this.vol.car = 'нет'
       }
-
+      } else {
+        this.cord.name = this.user.username;
+        this.cord.phone = this.phone;
+        this.cord.email = this.user.email;
+        this.cord.status = 'не активен';
+        this.cord.cnumber = this.vol.unumber;
+        this.cord.user = null;
+        this.cord.allocationList = null;
+      }
+      
       this.$validator.validate().then(isValid => {
         if (isValid) {
-              this.$store.dispatch('auth/register', {user: this.user, vol: this.vol}).then(
+          if (this.isVol === true){
+            this.$store.dispatch('auth/register', {user: this.user, vol: this.vol}).then(
             data => {
+              this.loading = false;
               this.message = data;
               console.log(data)
               if (this.message === 'Подтверждение аккаунта отправлено на почту!'){
                 this.successful = true;
               }
-              
             },
             error => {
+              this.loading = false;
               this.message =
                 (error.response && error.response.data && error.response.data.message) ||
                 error.message ||
                 error.toString();
+                if (this.message === 'No message available'){
+                  this.message = 'Такого кода аккредитации не существует!'
+                }
               this.successful = false;
             }
           );
+          } else {
+            this.$store.dispatch('auth/registerCord', {user: this.user, cord: this.cord}).then(
+            data => {
+              this.loading = false;
+              this.message = data;
+              console.log(data)
+              if (this.message === 'Подтверждение аккаунта отправлено на почту!'){
+                this.successful = true;
+              }
+            },
+            error => {
+              this.loading = false;
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+                if (this.message === 'No message available'){
+                  this.message = 'Такого кода аккредитации не существует!'
+                }
+              this.successful = false;
+            }
+            );
+          }
         }
       });
     }

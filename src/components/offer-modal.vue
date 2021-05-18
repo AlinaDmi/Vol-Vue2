@@ -55,17 +55,23 @@ export default {
       ]),
       filterAll(car,city){
         console.log(car,city)
+        if(car === 'нет'){
+          car = null
+        }
         this.volsFiltered=this.getVolFilter(car,city);
       },
-    },
+    }, 
     mounted () {
       this.GET_VOLS();
-      this.filterAll(this.orderInfo.car, this.orderInfo.city)
+      this.filterAll(this.orderInfo.order.car, this.orderInfo.order.city)
     },
     
 }
 </script>
 
 <style>
+.catalog_list {
+  align-content: flex-start
+}
 
 </style>

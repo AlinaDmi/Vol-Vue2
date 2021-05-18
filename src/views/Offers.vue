@@ -38,6 +38,9 @@ export default {
   },
   mounted () {
       this.GET_OFFERS(this.currentUser);
+      if (this.currentUser.roleName !== 'ROLE_VOL') {
+      this.$router.push('/login');
+    }
   },
 }
 </script>

@@ -6,12 +6,11 @@
 </template>
 
 <script>
-import appHeader from './components/HeaderV.vue'
+import appHeader from './components/header.vue'
 // import style from './assets/style.css'
 export default {
 
   name: 'Home',
-
    components: {
         appHeader
    },

@@ -9,12 +9,28 @@
   <profile-personal 
     :person="currentUser"
   />
-  <!-- <profile-table /> -->
-  <h3>Мои заказы</h3>
+
+  <h2 class="mt-4">Мои заказы</h2>
+  
+    <div class="col-md-6 mx-auto my-0">
+    <div class="card-container my-0 py-0">
+      <b-row>
+            <b-col sm class="my-0 py-0">
+              <b-form-select v-model="selectedStat" :options="optionsStat" size="sm" @change="onChangeStat()"></b-form-select>
+            </b-col>
+            <b-col sm class="my-0 py-0 mt-2">
+                <p>Найдено заказов: {{ordersSum.length}}</p>
+            </b-col>
+        </b-row>
+      
+    </div>
+    </div>
+
   <p v-if="!personalOrders.length">Заказов пока нет</p>
-  <div class="catalog-personal_list">
+
+  <div class="catalog_list scrollbar-cyan">
             <orders-personal
-                v-for="personalOrders in personalOrders"
+                v-for="personalOrders in ordersSum"
                 :key="personalOrders.id_ord"
                 v-bind:order_data="personalOrders"
             />
@@ -24,7 +40,7 @@
 
 <script>
 
-import {mapActions, mapState} from 'vuex'
+import {mapActions,mapGetters, mapState} from 'vuex'
 import ordersPersonal from '../components/orders-personal.vue';
 import ProfilePersonal from '../components/profile-personal.vue';
 export default {
@@ -33,7 +49,19 @@ export default {
  data: function () {
     return {
       idus:0,
-      role:''
+      role:'',
+      selectedStat: null,
+      ordersFiltered:[],
+      optionsStatCord: [
+        { value: null, text: 'Всё' },
+        { value: 'активен', text: 'Активен' },
+        { value: 'принят к исполнению', text: 'Принят к исполнению' },
+        { value: 'выполнен', text: 'Выполнен' }],
+      optionsStatVol: [
+        { value: null, text: 'Всё' },
+        { value: 'принят к исполнению', text: 'Принят к исполнению' },
+        { value: 'выполнен', text: 'Выполнен' }],
+
     }
   },
   computed: {
@@ -48,8 +76,33 @@ export default {
     },
     ...mapState([
       'personalOrders'
-    ])
+    ]),
+    ...mapGetters([
+      'withFilterPersonal'
+    ]),
+    optionsStat(){
+      if (this.role === 'ROLE_VOL'){
+        return this.optionsStatVol
+      } else {
+        return this.optionsStatCord
+      }
+    },
+    ordersSum(){
+      if(!this.ordersFiltered.length && this.selectedStat === null){
+        return this.personalOrders
+      } else {
+        return this.ordersFiltered
+      }
+    }
   },
+     watch: {
+    personalOrders: {
+        immediate: true, 
+        deep: true,
+        handler (val, oldVal) {
+        }
+    }
+  },   
 
   methods: {
         ...mapActions([
@@ -57,6 +110,9 @@ export default {
             'GET_ORDERS_PERSONAL_DONE',
             'GET_ORDERS_PERSONAL_CORD'
         ]),
+        onChangeStat(){
+          this.ordersFiltered=this.withFilterPersonal(this.selectedStat)
+        }
     },
   mounted() {
     if(this.role === 'ROLE_VOL'){
@@ -69,6 +125,9 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
     }
+    if (this.currentUser.roleName === "ROLE_ADMIN") {
+      this.$router.push('/admin');
+    }
   }
 };
 </script>
@@ -80,7 +139,6 @@ export default {
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            // height: 600px;
             overflow-y:scroll;
         }
     }

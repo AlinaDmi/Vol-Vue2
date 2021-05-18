@@ -11,7 +11,7 @@
 		<div class="col-xs-10 col-sm-10 col-md-8 col-lg-8 col-xl-6">
 			<p class="lead">Помощь пожилым и маломобильным людям, а также медикам, сотрудникам социальных учреждений НКО и другим нуждающимся</p>
 			<div class="text-center">
-				<button type="button" class="btn btn-lg" onclick="document.location='application.html'">Оставить заявку</button>
+				<button type="button" class="btn btn-lg" @click="$router.push('/sendorder')">Оставить заявку</button>
 			</div>
 			
 		</div>
@@ -29,7 +29,7 @@
 		<div class="col-xs-10 col-sm-10 col-md-8 col-lg-8 col-xl-6">
 			<p class="lead">Оказать помощь можно самыми разнообразными способами, такими как покупка и доставка продуктов, а также лекарств и товаров первой необходимости, автоволонтёрство и помощь сфере здравоохранения</p>
 			<div class="text-center">
-				<button type="button" class="btn btn-lg" onclick="document.location='reg.html'">Стать волонтёром</button>
+				<button type="button" class="btn btn-lg" @click="$router.push('/register')">Стать волонтёром</button>
 			</div>
 			
 		</div>

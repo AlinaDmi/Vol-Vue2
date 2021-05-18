@@ -92,6 +92,20 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    registerCord({ commit }, {user,cord}) {
+      console.log('С модуля лога ',user,cord)
+      return AuthService.registerCord(user,cord).then(
+        response => {
+          commit('registerSuccess');
+          console.log('Респонс ',response.data,' Дата респонса ', response)
+          return Promise.resolve(response.data);
+        },
+        error => {
+          commit('registerFailure');
+          return Promise.reject(error);
+        }
+      );
     }
   },
   mutations: {

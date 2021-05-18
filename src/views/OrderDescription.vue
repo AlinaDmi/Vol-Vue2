@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="pb-4">
   <orange-block 
 		:org-bl-tit="'Заказ: ' + orderDesc.order.name"
 		:orgBlDesc="'статус: ' + orderDesc.order.ordstatus"/>
@@ -50,10 +50,11 @@
         <offer-modal :orderInfo="orderDesc" v-else-if="orderDesc.order.ordstatus==='активен' && currentUser.roleName === 'ROLE_CORD'"/>
        
         <div v-else-if="orderDesc.order.ordstatus==='в рассмотрении' && currentUser.roleName === 'ROLE_CORD'" class="d-flex justify-content-center">
-          <button  type="button" @click="ConfirmOrder(acceptData2)" class="btn mr-2">Подтвердить</button>
+          <button  type="button" @click="ConfirmOrder(acceptData2),GET_ORDER_INFO(ordIdData)" class="btn mr-2">Подтвердить</button>
           <modal-order-edit :orderInfo="orderDesc" :id_ord="ordIdData"/>
         </div>
-        <modal :id_ord="ordIdData" :id_vol="currentUser.user.id_vol" v-else-if="orderDesc.order.ordstatus==='завершен' && currentUser.roleName === 'ROLE_VOL'"/>
+        <modal :id_ord="ordIdData" :id_vol="currentUser.user.id_vol" v-else-if="orderDesc.order.ordstatus==='выполнен'"/>
+        <modal-block class="my-2" :orderInfo="orderDesc"  v-if="currentUser.roleName === 'ROLE_CORD'"/>
          	</div>
     
 
@@ -64,13 +65,14 @@
 <script>
 import { mapState,mapActions } from 'vuex';
 import FinishModal from '../components/finish-modal.vue';
+import ModalBlock from '../components/modal-block.vue';
 import ModalOrderEdit from '../components/modal-order-edit.vue';
 import Modal from '../components/modal.vue';
 import OfferModal from '../components/offer-modal.vue';
 import OrangeBlock from '../components/orange-block.vue'
 export default {
     name:'orderDesc',
-    components: {OrangeBlock, Modal, OfferModal, ModalOrderEdit, FinishModal},
+    components: {OrangeBlock, Modal, OfferModal, ModalOrderEdit, FinishModal, ModalBlock},
     props: ['ordId'],
        data(){
         return{
@@ -108,6 +110,26 @@ export default {
         return '-';
       }
     },
+    watch: {
+    orderDesc: {
+        immediate: true, 
+        deep: true,
+        handler (val, oldVal) {
+          if (this.orderDesc.volunteer){
+              this.vol_name = this.orderDesc.volunteer.name
+              this.vol_phone = this.orderDesc.volunteer.phone
+            }
+          if (this.orderDesc.cord){
+              this.cord_name = this.orderDesc.cord.name
+              this.cord_phone = this.orderDesc.cord.phone
+            }
+          if (this.orderDesc.customer){
+            this.cus_name = this.orderDesc.customer.cus_name
+            this.cus_phone = this.orderDesc.customer.cusphone
+          }
+        }
+    }
+  },  
     methods: {
       ...mapActions([
           'ACCEPT_ORDER',
@@ -132,25 +154,16 @@ export default {
         this.idus = this.$store.state.auth.user.user.id_cord;
       }
       this.acceptData2 = this.ordIdData+','+this.idus;
-      if (this.orderDesc.volunteer){
-          this.vol_name = this.orderDesc.volunteer.name
-          this.vol_phone = this.orderDesc.volunteer.phone
-        }
-      if (this.orderDesc.cord){
-          this.cord_name = this.orderDesc.cord.name
-          this.cord_phone = this.orderDesc.cord.phone
-        }
-      if (this.orderDesc.customer){
-        this.cus_name = this.orderDesc.customer.cus_name
-        this.cus_phone = this.orderDesc.customer.cusphone
-      }
+      this.vol_name='-',
+      this.vol_phone='-',
+      this.cord_name='-',
+      this.cord_phone='-',
+      this.cus_name='-',
+      this.cus_phone='-'
       
-      // this.$store.watch(
-      // (state, getters) => state.orderDesc,
-      // (newValue, oldValue) => {
-      //   console.log(`Updating from ${oldValue} to ${newValue}`);
-      //   this.stat = state.orderDesc.ordstatus
-      // })
+      if (this.currentUser.roleName === "ROLE_ADMIN") {
+      this.$router.push('/admin');
+    }
 
       this.$store.watch(
       state => state.orderDesc.order.ordstatus,

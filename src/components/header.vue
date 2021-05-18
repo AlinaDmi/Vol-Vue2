@@ -1,60 +1,6 @@
 <template>
   <div id="nav">
-    <!-- <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
-	<div class="container-fluid">
-		<a class="navbar-brand">
-			<img src="../assets/pics/logo.svg" alt="logo">
-			<img src="../assets/pics/logo_m.svg" alt="logo_m">
-		</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-			<span >
-				<img src="../assets/pics/phone_menu.svg">
-			</span>
-		</button>
-    <nav class="navbar navbar-expand navbar-light bg-light">
-
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link to="/" class="nav-link">
-            Главная
-          </router-link>
-        </li>
-        <li class="nav-item ">
-					<router-link class="nav-link" to="/catalog">Каталог</router-link>
-				</li>
-
-      </div>
-
-      <div v-if="!currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">
-            Регистрация
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link">
-            Вход
-          </router-link>
-        </li>
-      </div>
-
-      <div v-if="currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">
-            {{ currentUser.username }}
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href @click.prevent="logOut">
-            Выход
-          </a>
-        </li>
-      </div>
-    </nav>
-
-	</div>
-</nav> -->
-
+  
   <!-- Адаптивнй -->
   <b-navbar toggleable="lg" type="light" variant="light fixed-top" >
         <b-navbar-brand>
@@ -97,10 +43,10 @@
             <li v-if="currentUser && currentUser.roleName === 'ROLE_VOL'" class="nav-item ">
               <router-link class="nav-link" to="/offers">Предложения</router-link>
             </li> 
-            <li v-if="currentUser" class="nav-item ">
+            <li v-if="currentUser && (currentUser.roleName === 'ROLE_VOL' || currentUser.roleName === 'ROLE_CORD')" class="nav-item ">
               <router-link class="nav-link" to="/catalog">Заказы</router-link>
             </li>
-            <li v-if="currentUser" class="nav-item">
+            <li v-if="currentUser && (currentUser.roleName === 'ROLE_VOL' || currentUser.roleName === 'ROLE_CORD')" class="nav-item">
               <router-link to="/profile" class="nav-link">
                 Профиль
               </router-link>
@@ -123,7 +69,7 @@
 <script>
 
 export default {
-  
+  name: 'Header',
   computed: {
     currentUser() {
       return this.$store.state.auth.user;

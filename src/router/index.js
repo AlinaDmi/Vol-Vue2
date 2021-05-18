@@ -9,6 +9,7 @@ import Settings from '../views/Settings.vue'
 import SendOrd from '../views/SendOrder.vue'
 import OrdDesc from '../views/OrderDescription.vue'
 import Offers from '../views/Offers.vue'
+import Admin from '../views/Admin.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,7 @@ const routes = [
   {path: '/settings', component: Settings},
   {path: '/sendorder', component: SendOrd},
   {path: '/offers', component: Offers},
+  {path: '/admin', component: Admin},
   {path: '/orddesc/:ordId', name:'orderdesc', component: OrdDesc, props: true},
   { path: '*', redirect: '/' }
 ]
@@ -33,18 +35,18 @@ const router = new VueRouter({
 
 // ПОТОМ ВЕРНИ И ДОПИШИ РОУТЫ
 
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['/login', '/register', '/'];
-//   const authRequired = !publicPages.includes(to.path);
-//   const loggedIn = localStorage.getItem('user');
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login', '/register', '/','/sendorder'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
 
-//   // trying to access a restricted page + not logged in
-//   // redirect to login page
-//   if (authRequired && !loggedIn) {
-//     next('/login');
-//   } else {
-//     next();
-//   }
-// })
+  // trying to access a restricted page + not logged in
+  // redirect to login page
+  if (authRequired && !loggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
+})
 
 export default router

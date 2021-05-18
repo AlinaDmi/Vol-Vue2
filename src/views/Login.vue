@@ -36,7 +36,6 @@
         </form>
 
 
-
       <form v-if="!reset && !resetM" name="form" @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="username">Логин</label>
@@ -78,9 +77,9 @@
           <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
         </div>
       </form>
-      <button v-if="!reset && !resetM" class="btn btn-link btn-anchor d-flex justify-content-end" @click="passReset" >
+    <!--  <button v-if="!reset && !resetM" class="btn btn-link btn-anchor d-flex justify-content-end" @click="passReset" >
             Забыли пароль?
-       </button>
+       </button> -->
     </div>
   </div>
 </div>
@@ -146,10 +145,10 @@ export default {
             },
             error => {
               this.loading = false;
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
+              this.message = 'Неверный логин или пароль'
+                // (error.response && error.response.data && error.response.data.message) ||
+                // error.message ||
+                // error.toString();
             }
           );
         }
@@ -172,7 +171,7 @@ label {
 }
 
 .card {
-  background-color: #f7f7f7;
+
   padding: 20px 25px 30px;
 
   -moz-border-radius: 2px;

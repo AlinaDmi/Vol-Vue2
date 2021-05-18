@@ -48,6 +48,7 @@
                     name="city"
                     @change="districtsByCity(selectedCity)"
                     class="form-control" id="city">
+                <option :value="null">Выберите город</option>  
                 <option v-for="city in cities"
                     :key="city.idcity"
                     v-bind:value="city.name">{{city.name}}</option>
@@ -61,11 +62,17 @@
                     v-validate="'required'"
                     name="district"
                     class="form-control" id="district">
+                <option :value="null">Выберите район</option>  
                 <option v-for="district in districts"
                     :key="district.iddistrict"
                     v-bind:value="district.name">{{district.name}}</option>
                 </select>
             </div>
+            <div
+              v-if="messageCit"
+              class="alert"
+              :class="successful ? 'alert-success' : 'alert-danger'"
+            >{{messageCit}}</div>
 
             <!-- Улица, дом -->
             <div class="form-group my-1 text-left">
@@ -148,9 +155,11 @@
           >Поле обязательно для заполнения</div>
           </div>
         </div>
-          <!-- В ЭТИ ФОРМЫ ЕБНУТЬ ПОИСК ВМЕСТЕ СО СПИСКОМ ТАМ БЫЛ ПРИМЕР ГДЕ_ТО НАЙДИ -->
           <div class="form-group welcome2 d-flex justify-content-center">
-            <button class="btn my-4 ">Отправить заказ</button>
+            <button class="btn my-4 " :disabled="loading">
+              <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+              <span>Отправить заказ</span>
+          </button>
           </div>
         </div>
       </form>
@@ -177,13 +186,14 @@ export default {
       order: new Order('','','','','','','',''),
       customer: new Customer('',''),
       phone: '',
-      selectedCity: 'Москва',
-      selectedDistr: 'Таганский район',
+      selectedCity: null,
+      selectedDistr: null,
       districts: [],
+       loading: false,
       submitted: false,
       successful: false,
-      test:'testfuck',
-      message: ''
+      message: '',
+      messageCit: ''
     };
   },
   props:
@@ -207,10 +217,8 @@ export default {
                     this.order.car_req = true
                 }
             }
-                
         }
     }
-
   },     
   computed: {
       ...mapState([
@@ -238,7 +246,9 @@ export default {
           this.phone = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
         },
     handleRegister() {
+       this.loading = true;
       this.message = '';
+      this.messageCit = '';
       this.submitted = true;
       this.customer.cusPhone = this.phone;
       this.order.city = this.selectedCity;
@@ -258,15 +268,24 @@ export default {
       }
 
       this.$validator.validate().then(isValid => {
+         if (this.selectedCity === null || this.selectedDistr === null) {
+          this.loading = false;
+          this.successful = false
+          this.messageCit = 'Выберите город и район!';
+          return;
+        }
         if (isValid) {
           if (this.isEdited !== true){
               this.$store.dispatch('auth/createOrder', {order: this.order, customer: this.customer}).then(
             data => {
-              this.message = data;
+               this.loading = false;
+              if(data.length === 8){
+                this.message = 'Заказ успешно создан! Ваш код подтверждения заказа: '+data+'. Сохраниете его и назовите волонтёру при успешном выполнении вашей заявки.'
+              }
               this.successful = true;
-              
             },
             error => {
+               this.loading = false;
               this.message =
                 (error.response && error.response.data && error.response.data.message) ||
                 error.message ||
@@ -278,10 +297,13 @@ export default {
             //ЧЕКНИ НА ПУТ И ПОСТ
              this.$store.dispatch('auth/editOrder', {order: this.order, id_ord: this.id_ord}).then(
             data => {
+               this.loading = false;
               this.message = 'Заказ успешно обновлён';
               this.successful = true;
+              
             },
             error => {
+               this.loading = false;
               this.message =
                 (error.response && error.response.data && error.response.data.message) ||
                 error.message ||

@@ -3,6 +3,11 @@
   <div class="col-md-12">
  <div class="card-container">
    <!-- Активен -->
+        <div
+        v-if="message"
+        class="alert"
+        :class="successful ? 'alert-success' : 'alert-danger'"
+      >{{message}}</div>
       <form name="form" @submit.prevent="handleSet">
 
             <!-- Логин -->
@@ -101,11 +106,7 @@
             </button>
           </div>
       </form>
-      <div
-        v-if="message"
-        class="alert"
-        :class="successful ? 'alert-success' : 'alert-danger'"
-      >{{message}}</div>
+
       
   </div>    
   </div>
@@ -172,16 +173,18 @@ export default {
 
       this.$validator.validate().then(isValid => {
         if (isValid) {
-             this.loading = false;
+            
              if(this.currentUser.roleName === 'ROLE_VOL'){
                 this.$store.dispatch('auth/editVol', {car: this.vol.car, city: this.vol.city, email: this.user.email, phone: this.vol.phone, id_vol: this.currentUser.user.id_vol}).then(
                 data => {
+                   this.loading = false;
                   this.EDIT_NAME( {id_vol:this.currentUser.user.id_vol, name:this.vol.name})
                   this.message = 'Данные успешно изменены. Для корректного отображения изменений перезайдите в аккаунт';
                   console.log(data)
                   this.successful = true;
                 },
                 error => {
+                   this.loading = false;
                   this.message =
                     (error.response && error.response.data && error.response.data.message) ||
                     error.message ||
@@ -215,7 +218,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style  lang="scss">
 label {
   display: block;
   margin-top: 10px;

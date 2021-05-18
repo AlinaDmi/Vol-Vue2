@@ -110,7 +110,7 @@ export default {
         filterAll(car,urg,selectedDistr,stat,selectedCity){
             if (this.currentUser.roleName === 'ROLE_VOL'){
                 stat = 'активен'
-                selectedCity = this.currentUser.user.selectedCity
+                selectedCity = this.currentUser.user.city
             }
 
             this.foundOrdersTitle = 'Найдено заказов:'

@@ -1,88 +1,39 @@
+
 <template>
 
-<div class="container-fluid welcome" id="personal_page">
-    <div class="row padding">
-		
-		<div class="col-lg-6 text-center pp">
-			<img src="img/svg/ava.png" class="img-fluid" id="ava">
-		</div>
-        <div class="col-lg-6 cont">
-            <h2>{{curPerson.name}}</h2>
-			
-            <p class="type-user">{{role}}</p>
+<div class="container-fluid welcome mb-4" id="personal_page">
 
-			<div class="row padding">
-				<div class="col">
-					<p>Пол: {{curPerson.gender}} <br>Возраст</p>
-				</div>
-				<div class="col">
-					<p>{{curPerson.email}} <br>
-					{{curPerson.phone}}</p>		
-				</div>
-			</div>
-			<p>Выполнено заказов:</p>
-			
-			<div class="col-lg-6 text-right">
-				<router-link to="/settings">
-					<img src="../assets/pics/settings.svg" class="img-fluid icon rot">
-				</router-link>
-				<!-- <img src="img/svg/logout.svg" class="img-fluid icon"> -->
-			</div>
-			
-        </div>
-    </div>
+     <b-container class="my-3">
+     <router-link to="/settings">
+      <img style="float:right" class="img-fluid icon rot" src="../assets/pics/settings.svg"/>
+     </router-link>
+     <h2>{{curPerson.name}}</h2>
+        <p class="type-user">{{role}}</p>
+        <b-row>
+            <b-col class="my-0 py-0">
+                {{curPerson.city}}
+            </b-col>
+            <b-col  class="my-0 py-0">
+                {{curPerson.email}}
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col class="my-0 py-0">
+               Пол: {{curPerson.gender}}
+            </b-col>
+            <b-col  class="my-0 py-0">
+                {{curPerson.phone}}
+            </b-col>
+        </b-row>     
+        <b-row class="">
+            <b-col class="mb-4">
+               Наличие автомобиля: {{curPerson.car}}
+            </b-col>
+            <b-col  class="mb-4">
 
-	 <!-- <div class="row">
-        <div class="col-md-10 mx-auto">
-            <form>
-                <div class="form-group row">
-                    <div class="col-sm-6">
-                        <label for="inputFirstname">First name</label>
-                        <input type="text" class="form-control" id="inputFirstname" placeholder="First name">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="inputLastname">Last name</label>
-                        <input type="text" class="form-control" id="inputLastname" placeholder="Last name">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-6">
-                        <label for="inputAddressLine1">Address</label>
-                        <input type="text" class="form-control" id="inputAddressLine1" placeholder="Street Address">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="inputAddressLine2">Address (Line 2)</label>
-                        <input type="text" class="form-control" id="inputAddressLine2" placeholder="Line 2">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-6">
-                        <label for="inputCity">City</label>
-                        <input type="text" class="form-control" id="inputCity" placeholder="City">
-                    </div>
-                    <div class="col-sm-3">
-                        <label for="inputState">State</label>
-                        <input type="text" class="form-control" id="inputState" placeholder="State">
-                    </div>
-                    <div class="col-sm-3">
-                        <label for="inputPostalCode">Postal Code</label>
-                        <input type="text" class="form-control" id="inputPostalCode" placeholder="Postal Code">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-6">
-                        <label for="inputContactNumber">Contact Number</label>
-                        <input type="number" class="form-control" id="inputContactNumber" placeholder="Contact Number">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="inputWebsite">Website</label>
-                        <input type="text" class="form-control" id="inputWebsite" placeholder="Website">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-primary px-4 float-right">Save</button>
-            </form>
-        </div>
-    </div> -->
+            </b-col>
+        </b-row>             
+     </b-container>
 
 </div>
 </template>
@@ -92,18 +43,18 @@ export default {
     props:['person'],
     data(){
         return{
-            role:'Волонтёр'
         }
     },
     computed:{
-        curPerson(){
-            if (this.person.roleName === 'ROLE_VOL'){
-                return this.person.user
-            } else {
-                this.role = 'Координатор'
-                return this.person.user
+            curPerson(){
+            return this.person.user
+        },
+        role(){
+            if(this.person.roleName === 'ROLE_VOL'){
+            return 'Волонтёр'
+            } else{
+                return 'Координатор'
             }
-            
         }
     }
 }
