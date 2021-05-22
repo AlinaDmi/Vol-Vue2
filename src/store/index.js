@@ -15,7 +15,8 @@ export default new Vuex.Store({
     orderDesc:[],
     cities:[],
     districts:[],
-    vols:[]
+    vols:[],
+    offers:[]
   },
   plugins: [createPersistedState()],
   mutations: {
@@ -151,12 +152,27 @@ export default new Vuex.Store({
       })
     },
     GET_OFFERS({commit},vol){
+      console.log('перед отправкой ',vol)
       return axios(API_URL+'vol/vol/offers/'+vol, {
         headers: authHeader() ,
         method: "GET"
       })
       .then ((orders)=>{
         commit('SET_ORDERS_TO_STATE',orders.data);
+        return orders;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
+    DEL_OFFERS({commit},offer){
+      console.log('перед отправкой ',offer)
+      return axios(API_URL+'vol/offers/'+offer, {
+        headers: authHeader() ,
+        method: "GET"
+      })
+      .then ((orders)=>{
         return orders;
       })
       .catch((error) => {
@@ -281,6 +297,26 @@ export default new Vuex.Store({
         return error;
       })
     },
+    RESET_PASS_TOKEN({commit},{token,newpass}){
+      console.log('перед отправкой ',token,newpass)
+      return axios(API_URL+'resetpasswordform/'+token, {
+        data: {
+          passwordOne: newpass,
+          passwordOne: newpass,
+          oldPassword: ''
+        },
+        headers: authHeader() ,
+        method: "POST"
+      })
+      .then ((response)=>{
+        console.log(response.data)
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      })
+    },
     CHANGE_STAT_VOL({commit},id_vol){
       console.log('перед отправкой ',id_vol)
       return axios(API_URL+'vol/statusVol/'+id_vol, {
@@ -394,11 +430,8 @@ export default new Vuex.Store({
     getVolFilter: state => (car,city) => {
       console.log(car,city);
       let volsSort = state.vols
-      if (car !== null)
-      {
-        if(car === 'да'){
-          car = 'есть'
-        }
+      if(car === 'да'){
+        car = 'есть'
         volsSort = volsSort.filter(vol => (vol.car === car))
       }
       if (city !== null)
@@ -437,6 +470,7 @@ export default new Vuex.Store({
       {
          ordsels = ordsels.filter(order => order.ordstatus === stat)
       }
+        ordsels = ordsels.filter(order => order.ordstatus !== 'выполнен')
       // console.log(ordsels)
       return ordsels
   },

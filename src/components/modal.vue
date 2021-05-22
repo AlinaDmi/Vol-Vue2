@@ -1,13 +1,16 @@
 <template>
   <div class="welcome2">
   <button class="btn mx-2" v-b-modal.modal-center>Получить отчёт</button>
-  <button v-if="currentUser.roleName === 'ROLE_VOL' && !fileRep" class="btn" v-b-modal.modal-center-rep>Добавить отчёт</button>
+  <button v-if="currentUser.roleName === 'ROLE_VOL' && !isRep" class="btn" v-b-modal.modal-center-rep>Добавить отчёт</button>
   
   <b-modal hide-footer id="modal-center" centered title="Получить отчёт">
     <div class="col-md-12">
     <div class="card-container">
+      <div v-if="isRep">
       <p><b>Затрачено часов: </b> {{fileRep.hours}}</p>
       <p><b>Отчёт: </b> {{fileRep.report}}</p>
+      </div>
+      <p v-else>Отчёта нет</p>
     </div>
     </div>
   </b-modal>
@@ -15,7 +18,7 @@
   <b-modal hide-footer id="modal-center-rep" centered title="Добавить отчёт">
     <div class="col-md-12">
     <div class="card-container">
-
+      
       <form name="form" @submit.prevent="handleSet">
            <!-- Часы -->
           <div class="form-group my-1 text-left">
@@ -56,6 +59,7 @@
             </button>
           </div>
       </form>
+
       <div
         v-if="message"
         class="alert"
@@ -83,6 +87,7 @@ export default {
         submitted: false,
         successful: false,
         loading: false,
+        isRep: false,
         message: ''
       }
     },
@@ -95,6 +100,7 @@ export default {
       this.GET_VOL_REPORT(this.id_ord).then(
         data => {
               this.fileRep = data.data
+              this.isRep = true
             }
       )
     },
@@ -103,6 +109,13 @@ export default {
           'VOL_REPORT',
           'GET_VOL_REPORT'
       ]),
+      makeToast(append = false, res) {
+        this.$bvToast.toast(`${res} Если изменения не отобразились - обновите страницу`, {
+          title: 'Результаты выполнения операции',
+          autoHideDelay: 5000,
+          appendToast: append
+        })
+      },
 
     handleSet() {
       this.loading = true;
@@ -113,9 +126,11 @@ export default {
             this.VOL_REPORT({report:this.report,time:this.hours,idOrder:this.id_ord}).then(
             data => {
               this.loading = false;
-              this.message = 'Очёт добавлен!';
-              console.log(data)
               this.successful = true;
+              this.message = 'Очёт добавлен!';
+              this.makeToast(false,this.message)
+              console.log(this.message)
+              
             },
             error => {
               this.loading = false;

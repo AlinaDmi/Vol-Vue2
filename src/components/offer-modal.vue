@@ -1,11 +1,10 @@
 <template>
-<!-- ЕСЛИ ЧТО, ТЫ ТУТ ФИЛЬТР ОФФЕРА ЕЩЕ НЕ СДЕЛАЛА -->
   <div class="welcome2">
   <button class="btn" v-b-modal.modal-center>Предложить волонтёру</button>
   <b-modal hide-footer id="modal-center" centered title="Предложить заказ волонтёру">
    <h4>{{foundVolTitle}} {{volsFiltered.length}}</h4>
     <div class="catalog_list scrollbar-cyan">
-      <find-vol :ord="orderInfo.id_ord"
+      <find-vol :ord="orderInfo.order.id_ord"
           v-for="vol in volsFiltered"
           :key="vol.id_vol"
           v-bind:vol_data="vol"
@@ -30,6 +29,7 @@ export default {
       return {
         volsFiltered:[],
         foundVolTitle: 'Найдено подходящих волонтёров: ',
+        changed: false
       }
     },
     components: {FindVol},
@@ -41,13 +41,17 @@ export default {
            ...mapGetters([
             'getVolFilter'
         ]),
-        // ordersCount(){
-        //     if(this.foundVolTitle === 'Найдено заказов:'){
-        //         return this.filteredOrdersSearch.length;
-        //     } else {
-        //         return null
-        //     }
-        // },
+
+    },
+    watch: {
+    orderInfo: {
+        immediate: true, 
+        deep: true,
+        handler (val, oldVal) {
+          console.log('тут')
+          this.filterAll(this.orderInfo.order.car, this.orderInfo.order.city)
+        }
+    },
     },
     methods: {
       ...mapActions([
@@ -55,15 +59,12 @@ export default {
       ]),
       filterAll(car,city){
         console.log(car,city)
-        if(car === 'нет'){
-          car = null
-        }
         this.volsFiltered=this.getVolFilter(car,city);
       },
     }, 
     mounted () {
       this.GET_VOLS();
-      this.filterAll(this.orderInfo.order.car, this.orderInfo.order.city)
+      
     },
     
 }

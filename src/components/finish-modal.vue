@@ -4,19 +4,19 @@
   <b-modal hide-footer id="modal-center" centered title="Завершить заказ">
     <form  @submit.prevent="handleCode">
         <div class="form-group my-1">
-            <label for="code" class="d-flex justify-content-center">Код</label>
+            <label for="Код" class="d-flex justify-content-center">Код</label>
             <input
               v-model="code"
               v-validate="'required'"
               type="text"
               class="form-control"
-              name="code"
+              name="Код"
             />
             <small class="form-text text-muted">Код, полученный от заказчика при выполнении заказа</small>
             <div
-              v-if="submitted && errors.has('code')"
+              v-if="submitted && errors.has('Код')"
               class="alert-danger"
-            >{{errors.first('code')}}</div>
+            >{{errors.first('Код')}}</div>
         </div>
         <div class="form-group welcome2 d-flex justify-content-center">
             <button class="btn my-4 ">Завершить</button>
@@ -60,7 +60,6 @@ export default {
                     if(this.message === 'Заказ выполнен!'){
                         this.successful = true
                         setTimeout(() => this.$emit('changeOrder'), 1000)
-                        
                     }
                     })
             }

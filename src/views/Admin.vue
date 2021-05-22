@@ -1,7 +1,7 @@
 <template>
 <div>
   <orange-block org-bl-tit="Админ-панель"/>
-      <div class="card-container welcome2">
+      <div class="card-container welcome2 mb-5">
         <div
             v-if="message"
             class="alert"

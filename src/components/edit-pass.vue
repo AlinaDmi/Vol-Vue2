@@ -8,7 +8,6 @@
                     <input class="custom-control-input custom-control-input-warning" @change="onChange()" id="customSwitch11" v-model="status" type="checkbox">
                     <label class="custom-control-label" for="customSwitch11">Профиль активен</label>
                     <small v-if="currentUser.roleName === 'ROLE_VOL'" class="form-text text-muted">При неактивном статусе нельзя принимать заказы, а также координаторы не смогут присылать вам предложения</small>
-            
                 </p>
             </div>
      <div

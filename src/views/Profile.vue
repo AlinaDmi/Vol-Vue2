@@ -100,6 +100,7 @@ export default {
         immediate: true, 
         deep: true,
         handler (val, oldVal) {
+          // console.log(this.ordersSum)
         }
     }
   },   

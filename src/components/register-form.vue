@@ -170,9 +170,8 @@
               class="alert-danger"
             >{{errors.first('unumber')}}</div>
           </div>  
-        
+      
 
-        <!-- В ЭТИ ФОРМЫ ЕБНУТЬ ПОИСК ВМЕСТЕ СО СПИСКОМ ТАМ БЫЛ ПРИМЕР ГДЕ_ТО НАЙДИ -->
           <div class="form-group welcome2 d-flex justify-content-center">
             <button class="btn my-4 " :disabled="loading">
               <span v-show="loading" class="spinner-border spinner-border-sm"></span>
@@ -260,6 +259,10 @@ export default {
       }
       
       this.$validator.validate().then(isValid => {
+           if (!isValid){
+           this.loading = false;
+          return;
+        }
         if (isValid) {
           if (this.isVol === true){
             this.$store.dispatch('auth/register', {user: this.user, vol: this.vol}).then(
@@ -300,7 +303,7 @@ export default {
                 error.message ||
                 error.toString();
                 if (this.message === 'No message available'){
-                  this.message = 'Такого кода аккредитации не существует!'
+                  this.message = 'Такого номера аккредитации не существует!'
                 }
               this.successful = false;
             }

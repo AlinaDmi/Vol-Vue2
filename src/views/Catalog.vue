@@ -97,8 +97,17 @@ export default {
                 return order;
             })
         }
-
     },
+    watch: {
+        orders: {
+        immediate: true, 
+        deep: true,
+        handler (val, oldVal) {
+           console.log('watch')
+          this.filterAll(this.car,this.urg,this.selectedDistr,this.stat,this.selectedCity)
+        }
+    }
+  }, 
     methods: {
         ...mapActions([
             'GET_ORDERS_API'
@@ -115,6 +124,7 @@ export default {
 
             this.foundOrdersTitle = 'Найдено заказов:'
             console.log(car,urg,selectedDistr,stat,selectedCity)
+            
             this.ordersFiltered=this.withFilter(car,urg,selectedDistr,stat,selectedCity);
             if(!this.ordersFiltered.length){
                 this.foundOrdersTitle = 'Заказы не найдены'
@@ -140,7 +150,6 @@ export default {
     },
     mounted(){
         this.GET_ORDERS_API()
-        this.filterAll(this.car,this.urg,this.selectedDistr,this.stat,this.selectedCity)
         
     }
 }

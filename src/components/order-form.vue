@@ -1,7 +1,7 @@
 <template>
   <div class="card-container">
 
-      <form name="form" @submit.prevent="handleRegister">
+      <form name="form" @submit.prevent="handleOrder">
         <div v-if="!successful">
           <h3 v-if="!isEdited" class="d-flex justify-content-center">Форма подачи заявки</h3>
             <!-- Название -->
@@ -231,7 +231,6 @@ export default {
   mounted() {
       this.GET_CITIES(),
       this.GET_DISTRICTS()
-      this.districts = this.getDistrictByCity('Москва')
   },
   methods: {
       ...mapActions([
@@ -245,7 +244,7 @@ export default {
           var x = this.phone.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
           this.phone = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
         },
-    handleRegister() {
+    handleOrder() {
        this.loading = true;
       this.message = '';
       this.messageCit = '';
@@ -268,6 +267,7 @@ export default {
       }
 
       this.$validator.validate().then(isValid => {
+
          if (this.selectedCity === null || this.selectedDistr === null) {
           this.loading = false;
           this.successful = false
@@ -294,13 +294,12 @@ export default {
             }
           );
           } else {
-            //ЧЕКНИ НА ПУТ И ПОСТ
              this.$store.dispatch('auth/editOrder', {order: this.order, id_ord: this.id_ord}).then(
             data => {
                this.loading = false;
               this.message = 'Заказ успешно обновлён';
               this.successful = true;
-              
+              setTimeout(() => this.$emit('changeOrder'), 2000)
             },
             error => {
                this.loading = false;

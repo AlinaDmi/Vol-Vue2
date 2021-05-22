@@ -3,8 +3,10 @@
   <orange-block 
 		:org-bl-tit="'Заказ: ' + orderDesc.order.name"
 		:orgBlDesc="'статус: ' + orderDesc.order.ordstatus"/>
+
+    <!-- 
     <h2>{{$route.params.ordId}}</h2>
-    <p>Юзер {{idus}}</p>
+    <p>Юзер {{idus}}</p> -->
 
   <b-container >
     <b-row>
@@ -45,13 +47,13 @@
 
     <div class="welcome2  text-center">
         <button v-if="orderDesc.order.ordstatus==='активен' && currentUser.roleName === 'ROLE_VOL'"  type="button" @click="acceptOrder(acceptData2)" class="btn">Принять к исполнению</button>
-        <finish-modal @changeOrder="GET_ORDER_INFO(ordIdData)" :id_ord="ordIdData"  v-else-if="orderDesc.ordstatus==='принят к исполнению' && currentUser.roleName === 'ROLE_VOL'"/>
-       
+        <finish-modal @changeOrder="GET_ORDER_INFO(ordIdData)" :id_ord="ordIdData"  v-else-if="orderDesc.order.ordstatus==='принят к исполнению' && currentUser.roleName === 'ROLE_VOL'"/>
+        
         <offer-modal :orderInfo="orderDesc" v-else-if="orderDesc.order.ordstatus==='активен' && currentUser.roleName === 'ROLE_CORD'"/>
        
         <div v-else-if="orderDesc.order.ordstatus==='в рассмотрении' && currentUser.roleName === 'ROLE_CORD'" class="d-flex justify-content-center">
           <button  type="button" @click="ConfirmOrder(acceptData2),GET_ORDER_INFO(ordIdData)" class="btn mr-2">Подтвердить</button>
-          <modal-order-edit :orderInfo="orderDesc" :id_ord="ordIdData"/>
+          <modal-order-edit @changeOrder="GET_ORDER_INFO(ordIdData)" :orderInfo="orderDesc" :id_ord="ordIdData"/>
         </div>
         <modal :id_ord="ordIdData" :id_vol="currentUser.user.id_vol" v-else-if="orderDesc.order.ordstatus==='выполнен'"/>
         <modal-block class="my-2" :orderInfo="orderDesc"  v-if="currentUser.roleName === 'ROLE_CORD'"/>
@@ -59,7 +61,7 @@
     
 
 </div>
-<!-- Очень почистить лишние переменные тут дохуя -->
+
 </template>
 
 <script>
@@ -115,6 +117,7 @@ export default {
         immediate: true, 
         deep: true,
         handler (val, oldVal) {
+          console.log('watch')
           if (this.orderDesc.volunteer){
               this.vol_name = this.orderDesc.volunteer.name
               this.vol_phone = this.orderDesc.volunteer.phone
@@ -137,11 +140,37 @@ export default {
           'CONFIRM_ORDER_CORD'
       ]),
       acceptOrder(acceptData2){
-        this.response = this.ACCEPT_ORDER(acceptData2);
+        this.ACCEPT_ORDER(acceptData2).then(
+          data => {
+              this.response = data
+              this.makeToast(false,this.response.data)
+              this.GET_ORDER_INFO(this.ordIdData);
+              this.stat = this.orderDesc.ordstatus
+          }
+        );
       },
       ConfirmOrder(acceptData2){
-        this.response = this.CONFIRM_ORDER_CORD(acceptData2);
-      }
+        this.CONFIRM_ORDER_CORD(acceptData2).then(
+          data => {
+              this.response = data
+              if(this.response.data.id_ord !== null){
+                this.makeToast(false,'Заказ успешно подтверждён!')
+                this.GET_ORDER_INFO(this.ordIdData);
+                this.stat = this.orderDesc.ordstatus
+              } else {
+                this.makeToast(false,'Не удалось подтвердить заказ!')
+              } 
+              
+          }
+        )
+      },
+        makeToast(append = false, res) {
+        this.$bvToast.toast(`${res} Если изменения не отобразились - обновите страницу`, {
+          title: 'Результаты выполнения операции',
+          autoHideDelay: 5000,
+          appendToast: append
+        })
+      },
     },
 
 // СДЕЛАТЬ ПРОВЕРКУ тип если статус в рассмотрении и акк не корда то послать нахуй

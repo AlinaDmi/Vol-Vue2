@@ -10,20 +10,22 @@ import SendOrd from '../views/SendOrder.vue'
 import OrdDesc from '../views/OrderDescription.vue'
 import Offers from '../views/Offers.vue'
 import Admin from '../views/Admin.vue'
+import Password from '../views/Password.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', name: 'Home', component: Home},
-  {path: '/catalog', name: 'Заказы', component: Catalog},
-  {path: '/login', component: Login},
-  {path: '/profile', component: Profile},
-  {path: '/register', component: Reg},
-  {path: '/settings', component: Settings},
-  {path: '/sendorder', component: SendOrd},
-  {path: '/offers', component: Offers},
-  {path: '/admin', component: Admin},
-  {path: '/orddesc/:ordId', name:'orderdesc', component: OrdDesc, props: true},
+  {path: '/', name: 'Home', component: Home, meta: {title:'Главная'}},
+  {path: '/catalog', component: Catalog, meta: {title:'Заказы'}},
+  {path: '/login', component: Login, meta: {title:'Вход'}},
+  {path: '/profile', component: Profile, meta: {title:'Профиль'}},
+  {path: '/register', component: Reg, meta: {title:'Регистрация'}},
+  {path: '/settings', component: Settings, meta: {title:'Настройки'}},
+  {path: '/sendorder', component: SendOrd, meta: {title:'Заявка на помощь'}},
+  {path: '/offers', component: Offers, meta: {title:'Предложения'}},
+  {path: '/admin', component: Admin, meta: {title:'Администратор'}},
+  {path: '/resetpass/:token', component: Password,props: true, meta: {title:'Сменить пароль'}, alias:'/resetpass'},
+  {path: '/orddesc/:ordId', name:'orderdesc', component: OrdDesc, props: true, meta: {title:'Страница заказа'}},
   { path: '*', redirect: '/' }
 ]
 
@@ -33,7 +35,6 @@ const router = new VueRouter({
   routes
 })
 
-// ПОТОМ ВЕРНИ И ДОПИШИ РОУТЫ
 
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/register', '/','/sendorder'];
@@ -42,7 +43,8 @@ router.beforeEach((to, from, next) => {
 
   // trying to access a restricted page + not logged in
   // redirect to login page
-  if (authRequired && !loggedIn) {
+  document.title = to.meta.title || '#МЫВМЕСТЕ';
+  if (authRequired && !loggedIn && to.meta.title !=='Сменить пароль') {
     next('/login');
   } else {
     next();

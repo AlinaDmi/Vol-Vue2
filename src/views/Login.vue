@@ -37,7 +37,7 @@
 
 
       <form v-if="!reset && !resetM" name="form" @submit.prevent="handleLogin">
-        <div class="form-group">
+        <div class="form-group my-1 text-left">
           <label for="username">Логин</label>
           <input
             v-model="user.username"
@@ -52,7 +52,7 @@
             role="alert"
           >Необходимо ввести логин</div>
         </div>
-        <div class="form-group">
+        <div class="form-group my-1 text-left">
           <label for="password">Пароль</label>
           <input
             v-model="user.password"
@@ -77,9 +77,9 @@
           <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
         </div>
       </form>
-    <!--  <button v-if="!reset && !resetM" class="btn btn-link btn-anchor d-flex justify-content-end" @click="passReset" >
-            Забыли пароль?
-       </button> -->
+    <button v-if="!reset && !resetM" class="btn btn-link btn-anchor d-flex justify-content-end" @click="passReset" >
+             Забыли пароль?
+       </button> 
     </div>
   </div>
 </div>

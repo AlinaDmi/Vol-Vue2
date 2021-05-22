@@ -9,6 +9,7 @@
      </router-link>
      <h2>{{curPerson.name}}</h2>
         <p class="type-user">{{role}}</p>
+        
         <b-row>
             <b-col class="my-0 py-0">
                 {{curPerson.city}}
@@ -19,7 +20,7 @@
         </b-row>
         <b-row>
             <b-col class="my-0 py-0">
-               Пол: {{curPerson.gender}}
+              <div v-if="role === 'Волонтёр'"> Пол: {{curPerson.gender}} </div>
             </b-col>
             <b-col  class="my-0 py-0">
                 {{curPerson.phone}}
@@ -27,7 +28,7 @@
         </b-row>     
         <b-row class="">
             <b-col class="mb-4">
-               Наличие автомобиля: {{curPerson.car}}
+             <div v-if="role === 'Волонтёр'">  Наличие автомобиля: {{curPerson.car}} </div>
             </b-col>
             <b-col  class="mb-4">
 
